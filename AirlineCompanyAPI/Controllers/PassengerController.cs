@@ -64,16 +64,17 @@ namespace AirlineCompanyAPI.Controllers
             }
         }
         [HttpPost]
-        public async Task<ActionResult<SignUpResult>> SignIn([FromBody] PassengerDto passengerDto)
+        public async Task<ActionResult<Passenger>> SignIn([FromBody] SignInDto signInDto)
         {
             try
             {
-                if (_userService.Verify(Request.Headers, _jwtService.GetUserRoleFromToken(Request.Headers)))
+                Passenger? passenger = _passengerLogic.GetSingleByUsernameAndPassword(signInDto.UserName, signInDto.Password);
+                if (passenger != null)
                 {
-                    Passenger newEntity = _mapper.Map<Passenger>(passengerDto);
-                    return await _userService.SignUp(newEntity);
+                    return Ok(passenger);
                 }
-                return BadRequest(Error.NotMatchedUser);
+                return BadRequest(Error.NotFoundUser);
+
             }
             catch (Exception ex)
             {

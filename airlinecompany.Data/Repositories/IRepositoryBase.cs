@@ -14,6 +14,7 @@ namespace airlinecompany.Data.Repositories
         public List<T>? Get(Func<T, bool> method);
         public T? GetSingle(int number);
         public T? GetSingleByMethod(Func<T, bool> method);
+        public T? GetSingleByMethod(Func<T, bool> method, Func<T, bool> method2);
 
 
     }

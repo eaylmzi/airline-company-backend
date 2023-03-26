@@ -70,6 +70,19 @@ namespace airlinecompany.Data.Repositories
 
             return entity;
         }
+        public T? GetSingleByMethod(Func<T, bool> method, Func<T, bool> method2)
+        {
+
+            T? entity = query
+                      .AsEnumerable()
+                      .Where(m => method(m) && method2(m))
+                      .Select(m => m)
+                      .SingleOrDefault();
+
+
+
+            return entity;
+        }
 
         public async Task<T>? UpdateAsync(Func<T, bool> metot, T? updatedEntity)
         {

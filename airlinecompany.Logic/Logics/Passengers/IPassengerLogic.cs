@@ -14,6 +14,7 @@ namespace airlinecompany.Logic.Logics.Passengers
         public List<Passenger>? Get(string name);
         public Passenger? GetSingle(int id);
         public Passenger? GetSingleByUsername(string username);
+        public Passenger? GetSingleByUsernameAndPassword(string username, string password);
         public Task<Passenger>? UpdateAsync(int id, Passenger updatedEntity);
     }
 }
