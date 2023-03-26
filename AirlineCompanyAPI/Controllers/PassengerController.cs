@@ -93,7 +93,7 @@ namespace AirlineCompanyAPI.Controllers
         {
             try
             {
-                if (_userService.VerifyPassenger(Request.Headers))
+                if (_userService.VerifyPassenger(Request.Headers)) 
                 {
                     Passenger? isPassengerFound = _passengerLogic.GetSingle(_jwtService.GetUserIdFromToken(Request.Headers));
                     if (isPassengerFound != null)
