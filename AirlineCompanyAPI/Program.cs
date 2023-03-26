@@ -38,6 +38,8 @@ builder.Services.AddScoped<IPointRepository, PointRepository>();
 builder.Services.AddScoped<ISessionPassengerLogic, SessionPassengerLogic>();
 builder.Services.AddScoped<ISessionPassengerRepository, SessionPassengerRepository>();
 
+builder.Services.AddAutoMapper(typeof(Program).Assembly);
+
 builder.Services.AddControllers();
 // Learn more about configuring Swagger/OpenAPI at https://aka.ms/aspnetcore/swashbuckle
 builder.Services.AddEndpointsApiExplorer();
