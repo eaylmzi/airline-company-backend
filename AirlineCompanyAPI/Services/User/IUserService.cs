@@ -6,6 +6,6 @@ namespace AirlineCompanyAPI.Services.User
     public interface IUserService
     {
         public Task<SignUpResult> SignUp(Passenger passenger);
-        public bool VerifyPassenger(IHeaderDictionary headers);
+        public bool Verify(IHeaderDictionary headers, string role);
     }
 }

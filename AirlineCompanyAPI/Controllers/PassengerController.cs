@@ -47,12 +47,16 @@ namespace AirlineCompanyAPI.Controllers
             _userService = userService;
          }
         [HttpPost]
-        public async Task<ActionResult<SignUpResult>> Add([FromBody] PassengerDto passengerDto)
+        public async Task<ActionResult<SignUpResult>> SignUp([FromBody] PassengerDto passengerDto)
         {
             try
             {
-                Passenger newEntity = _mapper.Map<Passenger>(passengerDto);
-                return await _userService.SignUp(newEntity);                
+                if (_userService.Verify(Request.Headers, _jwtService.GetUserRoleFromToken(Request.Headers)))
+                {
+                    Passenger newEntity = _mapper.Map<Passenger>(passengerDto);
+                    return await _userService.SignUp(newEntity);
+                }
+                return BadRequest(Error.NotMatchedUser);
             }
             catch (Exception ex)
             {
@@ -60,16 +64,42 @@ namespace AirlineCompanyAPI.Controllers
             }
         }
         [HttpPost]
-        public ActionResult<BooleanDto> Delete([FromBody] IdDto idDto)
+        public async Task<ActionResult<SignUpResult>> SignIn([FromBody] PassengerDto passengerDto)
         {
             try
             {
-                return new BooleanDto { isHappened = _passengerLogic.Delete(idDto.Id) };
+                if (_userService.Verify(Request.Headers, _jwtService.GetUserRoleFromToken(Request.Headers)))
+                {
+                    Passenger newEntity = _mapper.Map<Passenger>(passengerDto);
+                    return await _userService.SignUp(newEntity);
+                }
+                return BadRequest(Error.NotMatchedUser);
             }
             catch (Exception ex)
             {
                 return BadRequest(ex.Message);
             }
+        }
+        [HttpPost, Authorize(Roles = $"{Role.Passenger}")]
+        public ActionResult<BooleanDto> Delete([FromBody] IdDto idDto)
+        {
+            try
+            {
+                if (_userService.Verify(Request.Headers, _jwtService.GetUserRoleFromToken(Request.Headers)))
+                {
+                    return new BooleanDto { isHappened = _passengerLogic.Delete(idDto.Id) };
+                }
+                return BadRequest(Error.NotMatchedUser);
+            }
+
+            catch (Exception ex)
+            {
+                return BadRequest(ex.Message);
+            }
+
+
+
+
         }
         [HttpPost]
         public ActionResult<Passenger> Get([FromBody] IdDto idDto)
@@ -93,7 +123,7 @@ namespace AirlineCompanyAPI.Controllers
         {
             try
             {
-                if (_userService.VerifyPassenger(Request.Headers)) 
+                if (_userService.Verify(Request.Headers, _jwtService.GetUserRoleFromToken(Request.Headers))) 
                 {
                     Passenger? isPassengerFound = _passengerLogic.GetSingle(_jwtService.GetUserIdFromToken(Request.Headers));
                     if (isPassengerFound != null)

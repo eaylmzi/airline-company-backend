@@ -43,7 +43,7 @@ namespace AirlineCompanyAPI.Services.Jwt
                 new Claim(ClaimTypes.Role,role),
                 new Claim("id",passenger.Id.ToString()),
                 new Claim("username",passenger.UserName.ToString()),
-                new Claim("role",role)
+                new Claim("role",role.ToString())
             };
 
             var key = new SymmetricSecurityKey(System.Text.Encoding.UTF8.GetBytes(
@@ -97,6 +97,13 @@ namespace AirlineCompanyAPI.Services.Jwt
             string user = jwt.Claims.First(c => c.Type == "id").Value;
             int userId = int.Parse(user);
             return userId;
+        }
+        public string GetUserRoleFromToken(IHeaderDictionary headers)
+        {
+            string requestToken = headers[HeaderNames.Authorization].ToString().Replace("bearer ", "");
+            var jwt = new JwtSecurityTokenHandler().ReadJwtToken(requestToken);
+            string role = jwt.Claims.First(c => c.Type == "role").Value;
+            return role;
         }
         public string GetUserTokenFromToken(IHeaderDictionary headers)
         {

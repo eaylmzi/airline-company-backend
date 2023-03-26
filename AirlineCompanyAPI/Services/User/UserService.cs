@@ -82,18 +82,20 @@ namespace AirlineCompanyAPI.Services.User
             }
             return CreateSignUpResult(Error.NotAssignedToken, -1, new Passenger());
         }
-        public bool VerifyPassenger(IHeaderDictionary headers)
+        public bool Verify(IHeaderDictionary headers,string role)
         {
-            Passenger? passenger = _passengerLogic.GetSingle(_jwtService.GetUserIdFromToken(headers));
-            if (passenger != null)
+            if(role == Role.Passenger)
             {
-                if (passenger.Token == _jwtService.GetUserTokenFromToken(headers))
+                Passenger? passenger = _passengerLogic.GetSingle(_jwtService.GetUserIdFromToken(headers));
+                if (passenger != null)
                 {
-                    return true;
+                    if (passenger.Token == _jwtService.GetUserTokenFromToken(headers))
+                    {
+                        return true;
+                    }
                 }
             }
             return false;
-
         }
     }
 }
