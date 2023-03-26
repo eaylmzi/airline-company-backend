@@ -9,5 +9,6 @@ namespace airlinecompany.Data.Repositories.Passengers
 {
     public class PassengerRepository :RepositoryBase<Passenger>, IPassengerRepository
     {
+       
     }
 }

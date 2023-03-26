@@ -13,6 +13,8 @@ namespace airlinecompany.Data.Repositories
         public Task<T>? UpdateAsync(Func<T, bool> method, T? updatedEntity);       
         public List<T>? Get(Func<T, bool> method);
         public T? GetSingle(int number);
-  
+        public T? GetSingleByMethod(Func<T, bool> method);
+
+
     }
 }

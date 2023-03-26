@@ -60,6 +60,16 @@ namespace airlinecompany.Data.Repositories
         {
             return query.Find(number);
         }
+        public T? GetSingleByMethod(Func<T, bool> method)
+        {
+            T? entity = query
+                      .Where(method)
+                      .Select(m => m)
+                      .SingleOrDefault();
+
+
+            return entity;
+        }
 
         public async Task<T>? UpdateAsync(Func<T, bool> metot, T? updatedEntity)
         {

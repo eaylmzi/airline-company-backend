@@ -13,6 +13,7 @@ namespace airlinecompany.Logic.Logics.Passengers
         public bool Delete(int id);
         public List<Passenger>? Get(string name);
         public Passenger? GetSingle(int id);
+        public Passenger? GetSingleByUsername(string username);
         public Task<Passenger>? UpdateAsync(int id, Passenger updatedEntity);
     }
 }
