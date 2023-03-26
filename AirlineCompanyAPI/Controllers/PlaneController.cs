@@ -71,14 +71,14 @@ namespace WebApplication1.Controllers
             }
         }
         [HttpPost]
-        public async Task<ActionResult<Plane>> Update([FromBody] Plane updatedPlane)
+        public async Task<ActionResult<Plane>> Update([FromBody] Plane updatedEntity)
         {
             try
             {
-                Plane? plane = await _planeLogic.UpdateAsync(updatedPlane.Id, updatedPlane);
-                if (plane != null)
+                Plane? updatedPlane = await _planeLogic.UpdateAsync(updatedEntity.Id, updatedEntity);
+                if (updatedPlane != null)
                 {
-                    return Ok(plane);
+                    return Ok(updatedPlane);
                 }
                 return Ok(emptyObject);
             }
