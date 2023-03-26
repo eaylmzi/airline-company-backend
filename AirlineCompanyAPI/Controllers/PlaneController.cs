@@ -1,4 +1,5 @@
 using airlinecompany.Data.Models;
+using airlinecompany.Data.Models.dto.Credentials.dto;
 using airlinecompany.Data.Models.dto.Planes.dto;
 using airlinecompany.Logic.Logics.Passengers;
 using airlinecompany.Logic.Logics.Planes;
@@ -12,6 +13,8 @@ namespace WebApplication1.Controllers
     [ApiController]
     public class PlaneController : ControllerBase
     {
+        Plane emptyObject = new Plane();
+
         private readonly IMapper _mapper;
         private readonly IPassengerLogic _passengerLogic;
         private readonly IPlaneLogic _planeLogic;
@@ -38,5 +41,52 @@ namespace WebApplication1.Controllers
                 return BadRequest(ex.Message);
             }
         }
+        [HttpPost]
+        public ActionResult<bool> Delete([FromBody] IdDto idDto)
+        {
+            try
+            {
+                return _planeLogic.Delete(idDto.Id);
+            }
+            catch (Exception ex)
+            {
+                return BadRequest(ex.Message);
+            }
+        }
+        [HttpPost]
+        public ActionResult<Plane> Get([FromBody] IdDto idDto)
+        {
+            try
+            {
+                Plane? plane = _planeLogic.GetSingle(idDto.Id);
+                if(plane != null)
+                {
+                    return Ok(plane);
+                }
+                return Ok(emptyObject);
+            }
+            catch (Exception ex)
+            {
+                return BadRequest(ex.Message);
+            }
+        }
+        [HttpPost]
+        public async Task<ActionResult<Plane>> Update([FromBody] Plane updatedPlane)
+        {
+            try
+            {
+                Plane? plane = await _planeLogic.UpdateAsync(updatedPlane.Id, updatedPlane);
+                if (plane != null)
+                {
+                    return Ok(plane);
+                }
+                return Ok(emptyObject);
+            }
+            catch (Exception ex)
+            {
+                return BadRequest(ex.Message);
+            }
+        }
+
     }
 }
