@@ -3,7 +3,7 @@ using System.Collections.Generic;
 using Microsoft.EntityFrameworkCore;
 using Microsoft.EntityFrameworkCore.Metadata;
 
-namespace AirlineCompanyAPI.Models
+namespace airlinecompany.Data.Models
 {
     public partial class AirlineCompanyDBContext : DbContext
     {

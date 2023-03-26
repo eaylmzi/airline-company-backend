@@ -1,7 +1,7 @@
 ﻿using System;
 using System.Collections.Generic;
 
-namespace AirlineCompanyAPI.Models
+namespace airlinecompany.Data.Models
 {
     public partial class Flight
     {
