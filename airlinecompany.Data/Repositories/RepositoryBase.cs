@@ -1,4 +1,4 @@
-﻿using AirlineCompanyAPI.Models;
+﻿using airlinecompany.Data.Models;
 using Microsoft.EntityFrameworkCore;
 using System;
 using System.Collections.Generic;
@@ -17,7 +17,7 @@ namespace airlinecompany.Data.Repositories
         {
             query = _context.Set<T>();
         }
-        public int? Add(T entity)
+        public int Add(T entity)
         {
             if (entity != null)
             {

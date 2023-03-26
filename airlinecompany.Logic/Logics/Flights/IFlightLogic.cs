@@ -1,4 +1,5 @@
-﻿using System;
+﻿using airlinecompany.Data.Models;
+using System;
 using System.Collections.Generic;
 using System.Linq;
 using System.Text;
@@ -8,5 +9,10 @@ namespace airlinecompany.Logic.Logics.Flights
 {
     public interface IFlightLogic
     {
+        public int Add(Flight entity);
+        public bool Delete(int id);
+        public List<Flight>? Get(string name);
+        public Flight? GetSingle(int id);
+        public Task<Flight>? UpdateAsync(int id, Flight updatedEntity);
     }
 }
