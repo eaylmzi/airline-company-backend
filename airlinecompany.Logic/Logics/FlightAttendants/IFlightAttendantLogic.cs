@@ -6,7 +6,7 @@ using System.Threading.Tasks;
 
 namespace airlinecompany.Logic.Logics.FlightAttendants
 {
-    internal interface IFlightAttendantLogic
+    public interface IFlightAttendantLogic
     {
     }
 }

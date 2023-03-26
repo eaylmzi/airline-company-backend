@@ -7,7 +7,7 @@ using System.Threading.Tasks;
 
 namespace airlinecompany.Data.Repositories.Passengers
 {
-    internal class PassengerRepository :RepositoryBase<Passenger>, IPassengerRepository
+    public class PassengerRepository :RepositoryBase<Passenger>, IPassengerRepository
     {
     }
 }
