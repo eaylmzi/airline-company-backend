@@ -29,12 +29,12 @@ namespace WebApplication1.Controllers
         //  [HttpPost, Authorize(Roles = $"{Roles.Driver},{Roles.Admin},{Roles.SuperAdmin}")]
 
         [HttpPost]
-        public ActionResult<int> Add([FromBody]PlaneDto planeDto)
+        public ActionResult<IdDto> Add([FromBody]PlaneDto planeDto)
         {
             try
             {
                 Plane plane = _mapper.Map<Plane>(planeDto);
-                return _planeLogic.Add(plane);              
+                return new IdDto { Id = _planeLogic.Add(plane) };              
             }
             catch (Exception ex)
             {
@@ -42,11 +42,11 @@ namespace WebApplication1.Controllers
             }
         }
         [HttpPost]
-        public ActionResult<bool> Delete([FromBody] IdDto idDto)
+        public ActionResult<BooleanDto> Delete([FromBody] IdDto idDto)
         {
             try
             {
-                return _planeLogic.Delete(idDto.Id);
+                return new BooleanDto { isHappened = _planeLogic.Delete(idDto.Id) };
             }
             catch (Exception ex)
             {
