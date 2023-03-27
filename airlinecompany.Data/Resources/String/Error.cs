@@ -10,8 +10,13 @@ namespace airlinecompany.Data.Resources.String
     {
         public const string AlreadyAddedPassenger = "The username is already taken";
         public const string AlreadyAddedUsername = "The username is already taken";
+
+        public const string NotDeletedPassenger = "The passenger not deleted";
         public const string NotFoundUser = "The credentials doesn't match";
         public const string NotFoundPassenger = "The passenger is not found";
+        public const string NotFoundPassengerCredential = "The username and password did not match";
+        public const string NotUpdatedPassenger = "The passenger is not updated";
+
         public const string NotFoundCompany = "The company is not found";
         public const string NotAssignedToken = "The token is not assigned to passenger";
         public const string NotAddedPassenger = "The passenger is not added";

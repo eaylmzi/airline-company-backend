@@ -21,6 +21,10 @@ namespace AirlineCompanyAPI.Services.Mapper
 
             CreateMap<FlightAttendantDto, FlightAttendant>();
 
+            CreateMap<PassengerSignUpDto, Passenger>();
+            CreateMap<PassengerSignUpDto,PassengerDto>();
+            CreateMap<PassengerSignInDto, Passenger>();
+            CreateMap<Passenger, PassengerSignInDto>();         
             CreateMap<PassengerDto, Passenger>();
             CreateMap<Passenger, PassengerDto>();
 

@@ -10,7 +10,8 @@ namespace airlinecompany.Data.Repositories
     {
         public int Add(T entity);
         public bool Delete(Func<T, bool> method);
-        public Task<T>? UpdateAsync(Func<T, bool> method, T? updatedEntity);       
+        public Task<T>? UpdateAsync(Func<T, bool> method, T? updatedEntity);
+        public Task<T>? UpdateAsync(T? entity, T? updatedEntity);
         public List<T>? Get(Func<T, bool> method);
         public T? GetSingle(int number);
         public T? GetSingleByMethod(Func<T, bool> method);

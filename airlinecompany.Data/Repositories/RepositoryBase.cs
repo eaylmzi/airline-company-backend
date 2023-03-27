@@ -2,6 +2,7 @@
 using Microsoft.EntityFrameworkCore;
 using System;
 using System.Collections.Generic;
+using System.Data.SqlTypes;
 using System.Linq;
 using System.Text;
 using System.Threading.Tasks;
@@ -62,13 +63,20 @@ namespace airlinecompany.Data.Repositories
         }
         public T? GetSingleByMethod(Func<T, bool> method)
         {
-            T? entity = query
-                      .Where(method)
-                      .Select(m => m)
-                      .SingleOrDefault();
+            try
+            {
+                T? entity = query
+                            .Where(method)
+                            .Select(m => m)
+                            .SingleOrDefault();
+                return entity;
+            }
+            catch (SqlNullValueException)
+            {
+                return null;
+            }
+          
 
-
-            return entity;
         }
         public T? GetSingleByMethod(Func<T, bool> method, Func<T, bool> method2)
         {
@@ -86,19 +94,45 @@ namespace airlinecompany.Data.Repositories
 
         public async Task<T>? UpdateAsync(Func<T, bool> metot, T? updatedEntity)
         {
-            T? entity = query
+            try {
+                T? entity = query
                      .Where(metot)
                      .Select(m => m)
                      .SingleOrDefault();
 
-            if (entity != null)
-            {            
-                _context.Entry(entity).CurrentValues.SetValues(updatedEntity);
-                await _context.SaveChangesAsync();
-                return updatedEntity;
-            }
+                if (entity != null)
+                {
+                    _context.Entry(entity).CurrentValues.SetValues(updatedEntity);
+                    await _context.SaveChangesAsync();
+                    return updatedEntity;
+                }
 
-            return null;
+                return null;
+
+            }
+            catch (Exception)
+            {
+                return null;
+            }
+        }
+        public async Task<T>? UpdateAsync(T? entity, T? updatedEntity)
+        {
+            try
+            {
+                if (entity != null)
+                {
+                    _context.Entry(entity).CurrentValues.SetValues(updatedEntity);
+                    await _context.SaveChangesAsync();
+                    return updatedEntity;
+                }
+
+                return null;
+
+            }
+            catch (Exception)
+            {
+                return null;
+            }
         }
     }
 }

@@ -118,9 +118,14 @@ namespace airlinecompany.Data.Models
                     .HasMaxLength(50)
                     .HasColumnName("name");
 
-                entity.Property(e => e.Password)
-                    .HasMaxLength(510)
-                    .HasColumnName("password");
+
+                entity.Property(e => e.PasswordHash)
+                    .HasMaxLength(512)
+                    .HasColumnName("password_hash");
+
+                entity.Property(e => e.PasswordSalt)
+                    .HasMaxLength(512)
+                    .HasColumnName("password_salt");
 
                 entity.Property(e => e.Surname)
                     .HasMaxLength(50)

@@ -5,8 +5,10 @@ using airlinecompany.Logic.Logics.Companies;
 using airlinecompany.Logic.Logics.FlightAttendants;
 using airlinecompany.Logic.Logics.Passengers;
 using airlinecompany.Logic.Logics.Planes;
+using AirlineCompanyAPI.Services.Cipher;
 using AirlineCompanyAPI.Services.Jwt;
 using AutoMapper;
+using Org.BouncyCastle.Crypto;
 
 namespace AirlineCompanyAPI.Services.User
 {
@@ -14,6 +16,7 @@ namespace AirlineCompanyAPI.Services.User
     {
         private readonly IMapper _mapper;
         private readonly IJwtService _jwtService;
+        private readonly ICipherService _cipherService;
         private readonly IConfiguration _configuration;
 
         private readonly IPassengerLogic _passengerLogic;
@@ -23,7 +26,7 @@ namespace AirlineCompanyAPI.Services.User
 
 
         public UserService(IMapper mapper, IJwtService jwtService, IConfiguration configuration, IPassengerLogic passengerLogic,
-            IPlaneLogic planeLogic, ICompanyLogic companyLogic, IFlightAttendantLogic flightAttendantLogic)
+            IPlaneLogic planeLogic, ICompanyLogic companyLogic, IFlightAttendantLogic flightAttendantLogic, ICipherService cipherService)
 
         {
             _mapper = mapper;
@@ -33,6 +36,7 @@ namespace AirlineCompanyAPI.Services.User
             _companyLogic = companyLogic;
             _flightAttendantLogic = flightAttendantLogic;
             _configuration = configuration;
+            _cipherService = cipherService;
         }
 
         private SignUpResult CreateSignUpResult(string message,int passengerId,Passenger passenger)
@@ -47,11 +51,11 @@ namespace AirlineCompanyAPI.Services.User
         private async Task<Passenger> AssingToken(int passengerId)
         {
             Passenger? addedPassenger = _passengerLogic.GetSingle(passengerId);
-            Passenger? updatedPassenger = new Passenger();
+            Passenger? updatedPassenger = addedPassenger;
             if (addedPassenger != null)
             {
-                addedPassenger.Token = _jwtService.CreateToken(addedPassenger, Role.Passenger, _configuration);
-                updatedPassenger = await _passengerLogic.UpdateAsync(passengerId, addedPassenger);
+                updatedPassenger.Token = _jwtService.CreateToken(updatedPassenger, Role.Passenger, _configuration);
+                updatedPassenger = await _passengerLogic.UpdateAsync(passengerId, updatedPassenger);
                 return updatedPassenger;               
             }
 
@@ -59,17 +63,21 @@ namespace AirlineCompanyAPI.Services.User
             return updatedPassenger;
             
 
+
         }
-        public async Task<SignUpResult> SignUp(Passenger passenger)
+       
+        public async Task<SignUpResult> SignUp(PassengerDto passengerDto)
         {
-            Passenger? isAlreadyAdded = _passengerLogic.GetSingleByUsername(passenger.UserName);
+            Passenger? isAlreadyAdded = _passengerLogic.GetSingleByUsername(passengerDto.UserName);
             if (isAlreadyAdded != null)
             {
                 return CreateSignUpResult(Error.AlreadyAddedPassenger, -1, new Passenger());
             }
 
-            passenger.Money = 0;
-            int passengerId = _passengerLogic.Add(passenger);
+            passengerDto.Money = 0;
+            
+            Passenger newPassenger = _mapper.Map<Passenger>(passengerDto);
+            int passengerId = _passengerLogic.Add(newPassenger);
             if (passengerId == -1)
             {
                 return CreateSignUpResult(Error.NotAddedPassenger, passengerId,new Passenger());
@@ -81,6 +89,12 @@ namespace AirlineCompanyAPI.Services.User
                 return CreateSignUpResult(Success.SuccesfullySignUp, passengerId, isUpdatedPassenger);
             }
             return CreateSignUpResult(Error.NotAssignedToken, -1, new Passenger());
+        }
+
+        public bool SignIn(string password,Passenger passenger)
+        {
+            bool isVerified = _cipherService.VerifyPasswordHash(passenger.PasswordHash, passenger.PasswordSalt, password);
+            return isVerified;
         }
         public bool Verify(IHeaderDictionary headers,string role)
         {

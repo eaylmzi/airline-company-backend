@@ -13,6 +13,7 @@ using airlinecompany.Logic.Logics.Passengers;
 using airlinecompany.Logic.Logics.Planes;
 using airlinecompany.Logic.Logics.Points;
 using airlinecompany.Logic.Logics.SessionPassengers;
+using AirlineCompanyAPI.Services.Cipher;
 using AirlineCompanyAPI.Services.Jwt;
 using AirlineCompanyAPI.Services.User;
 using Microsoft.AspNetCore.Authentication.JwtBearer;
@@ -26,6 +27,8 @@ var builder = WebApplication.CreateBuilder(args);
 // Add services to the container.
 builder.Services.AddScoped<IJwtService, JwtService>();
 builder.Services.AddScoped<IUserService, UserService>();
+builder.Services.AddScoped<ICipherService, CipherService>();
+
 
 builder.Services.AddScoped<ICompanyLogic, CompanyLogic>();
 builder.Services.AddScoped<ICompanyRepository, CompanyRepository>();

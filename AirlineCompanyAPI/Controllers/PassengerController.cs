@@ -14,6 +14,8 @@ using Microsoft.Extensions.Configuration;
 using AirlineCompanyAPI.Services.User;
 using airlinecompany.Data.Models.dto.Passengers.dto;
 using Microsoft.AspNetCore.Authorization;
+using AirlineCompanyAPI.Services.Cipher;
+using airlinecompany.Data.Models.dto;
 
 namespace AirlineCompanyAPI.Controllers
 {
@@ -25,6 +27,8 @@ namespace AirlineCompanyAPI.Controllers
         private readonly IMapper _mapper;
         private readonly IJwtService _jwtService;
         private readonly IUserService _userService;
+        private readonly ICipherService _cipherService;
+
         private readonly IConfiguration _configuration;
 
         private readonly IPassengerLogic _passengerLogic;
@@ -33,30 +37,33 @@ namespace AirlineCompanyAPI.Controllers
         private readonly IFlightAttendantLogic _flightAttendantLogic;
 
 
-        public PassengerController(IMapper mapper, IJwtService jwtService, IUserService userService, IConfiguration configuration, IPassengerLogic passengerLogic, 
+        public PassengerController(IMapper mapper, IJwtService jwtService, IUserService userService, ICipherService cipherService, IConfiguration configuration, IPassengerLogic passengerLogic, 
             IPlaneLogic planeLogic, ICompanyLogic companyLogic, IFlightAttendantLogic flightAttendantLogic)
 
         {
             _mapper = mapper;
             _jwtService = jwtService;
             _passengerLogic = passengerLogic;
-            _planeLogic = planeLogic; 
+            _planeLogic = planeLogic;
+            _cipherService = cipherService;
             _companyLogic = companyLogic;
             _flightAttendantLogic = flightAttendantLogic;
             _configuration = configuration;
             _userService = userService;
          }
         [HttpPost]
-        public async Task<ActionResult<SignUpResult>> SignUp([FromBody] PassengerDto passengerDto)
+        public async Task<ActionResult<SignUpResult>> SignUp([FromBody] PassengerSignUpDto passengerSignUpDto)
         {
             try
             {
-                if (_userService.Verify(Request.Headers, _jwtService.GetUserRoleFromToken(Request.Headers)))
-                {
-                    Passenger newEntity = _mapper.Map<Passenger>(passengerDto);
-                    return await _userService.SignUp(newEntity);
-                }
-                return BadRequest(Error.NotMatchedUser);
+                PassengerDto newEntity = new PassengerDto();
+                newEntity = _mapper.Map<PassengerDto>(passengerSignUpDto);
+
+                _cipherService.CreatePasswordHash(passengerSignUpDto.Password, out byte[] passwordHash, out byte[] passwordSalt);
+                newEntity.PasswordHash = passwordHash;
+                newEntity.PasswordSalt = passwordSalt;
+
+                return await _userService.SignUp(newEntity);
             }
             catch (Exception ex)
             {
@@ -64,17 +71,21 @@ namespace AirlineCompanyAPI.Controllers
             }
         }
         [HttpPost]
-        public async Task<ActionResult<Passenger>> SignIn([FromBody] SignInDto signInDto)
+        public ActionResult<Response<PassengerSignInDto>> SignIn([FromBody] SignInDto signInDto)
         {
             try
             {
-                Passenger? passenger = _passengerLogic.GetSingleByUsernameAndPassword(signInDto.UserName, signInDto.Password);
+                Passenger? passenger = _passengerLogic.GetSingleByUsername(signInDto.UserName);
                 if (passenger != null)
                 {
-                    return Ok(passenger);
+                    bool isLogin = _userService.SignIn(signInDto.Password, passenger);
+                    if (isLogin)
+                    {
+                        PassengerSignInDto passengerSignInDto = _mapper.Map<PassengerSignInDto>(passenger);
+                        return Ok(new Response<PassengerSignInDto> { Message = Success.SuccesfullySignIn, Data = passengerSignInDto });
+                    }                 
                 }
-                return BadRequest(Error.NotFoundUser);
-
+                return BadRequest(new Response<PassengerSignInDto> { Message = Error.NotFoundPassengerCredential, Data = new PassengerSignInDto() });
             }
             catch (Exception ex)
             {
@@ -82,13 +93,18 @@ namespace AirlineCompanyAPI.Controllers
             }
         }
         [HttpPost, Authorize(Roles = $"{Role.Passenger}")]
-        public ActionResult<BooleanDto> Delete([FromBody] IdDto idDto)
+        public ActionResult<Response<bool>> Delete([FromBody] IdDto idDto)
         {
             try
             {
                 if (_userService.Verify(Request.Headers, _jwtService.GetUserRoleFromToken(Request.Headers)))
                 {
-                    return new BooleanDto { isHappened = _passengerLogic.Delete(idDto.Id) };
+                    bool isDeleted = _passengerLogic.Delete(idDto.Id);
+                    if (isDeleted)
+                    {
+                        return Ok(new Response<bool> { Message = Success.SuccesfullyDeletedPassenger, Data = isDeleted });
+                    }
+                    return BadRequest(new Response<bool> { Message = Error.NotDeletedPassenger, Data = isDeleted });
                 }
                 return BadRequest(Error.NotMatchedUser);
             }
@@ -103,16 +119,16 @@ namespace AirlineCompanyAPI.Controllers
 
         }
         [HttpPost]
-        public ActionResult<Passenger> Get([FromBody] IdDto idDto)
+        public ActionResult<Response<Passenger>> Get([FromBody] IdDto idDto)
         {
             try
             {
                 Passenger? passenger = _passengerLogic.GetSingle(idDto.Id);
                 if (passenger != null)
                 {
-                    return Ok(passenger);
+                    return Ok(new Response<Passenger> { Message = Success.SuccesfullyAddedPassenger, Data = passenger });
                 }
-                return Ok(emptyObject);
+                return Ok(new Response<Passenger> { Message = Success.SuccesfullyAddedPassenger, Data = new Passenger()});
             }
             catch (Exception ex)
             {
@@ -120,7 +136,7 @@ namespace AirlineCompanyAPI.Controllers
             }
         }
         [HttpPost, Authorize(Roles = $"{Role.Passenger}")]
-        public async Task<ActionResult<PassengerDto>> Update([FromBody] PassengerDto passengerDto)
+        public async Task<ActionResult<Response<PassengerDto>>> Update([FromBody] PassengerDto passengerDto)
         {
             try
             {
@@ -132,7 +148,7 @@ namespace AirlineCompanyAPI.Controllers
                         Passenger? isUserNameUnique = _passengerLogic.GetSingleByUsername(passengerDto.UserName);
                         if (isUserNameUnique != null)
                         {
-                            return BadRequest(Error.AlreadyAddedUsername);
+                            return BadRequest(new Response<PassengerDto> { Message = Error.AlreadyAddedUsername, Data = new PassengerDto() });
                         }
 
                         Passenger newPassenger = _mapper.Map<Passenger>(passengerDto);
@@ -144,12 +160,12 @@ namespace AirlineCompanyAPI.Controllers
                         if (updatedPassenger != null)
                         {
                             PassengerDto updatedPassengerDto = _mapper.Map<PassengerDto>(updatedPassenger);
-                            return Ok(updatedPassengerDto);
+                            return Ok(new Response<PassengerDto> { Message = Success.SuccesfullyUpdatedPassenger, Data = updatedPassengerDto });
                         }
 
-                        return Ok(emptyObject);
+                        return Ok(new Response<PassengerDto> { Message = Error.NotUpdatedPassenger, Data = new PassengerDto() });
                     }
-                    return BadRequest(Error.NotFoundPassenger);
+                    return Ok(new Response<PassengerDto> { Message = Error.NotFoundPassenger, Data = new PassengerDto() });
 
                 }
                 return BadRequest(Error.NotMatchedUser);

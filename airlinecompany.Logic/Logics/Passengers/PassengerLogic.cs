@@ -45,18 +45,16 @@ namespace airlinecompany.Logic.Logics.Passengers
             Passenger? entity = _passengerRepository.GetSingleByMethod(getEntity);
             return entity;
         }
-        public Passenger? GetSingleByUsernameAndPassword(string username,string password)
-        {
-            Func<Passenger, bool> getUserName = getUserName => getUserName.UserName == username;
-            Func<Passenger, bool> getPassword = getPassword => getPassword.Password == password;
-            Passenger? entity = _passengerRepository.GetSingleByMethod(getUserName, getPassword);
-            return entity;
-        }
 
         public async Task<Passenger>? UpdateAsync(int id, Passenger updatedEntity)
         {
             Func<Passenger, bool> filter = filter => filter.Id == id;
             Passenger? updateResult = await _passengerRepository.UpdateAsync(filter, updatedEntity);
+            return updateResult;
+        }
+        public async Task<Passenger>? UpdateAsync(Passenger entity, Passenger updatedEntity)
+        {
+            Passenger? updateResult = await _passengerRepository.UpdateAsync(entity, updatedEntity);
             return updateResult;
         }
     }
