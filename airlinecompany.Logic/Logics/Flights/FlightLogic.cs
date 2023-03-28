@@ -1,4 +1,5 @@
 ﻿using airlinecompany.Data.Models;
+using airlinecompany.Data.Models.dto.Flights.dto;
 using airlinecompany.Data.Repositories.FlightAttendants;
 using airlinecompany.Data.Repositories.Flights;
 using System;
@@ -45,6 +46,11 @@ namespace airlinecompany.Logic.Logics.Flights
             Func<Flight, bool> filter = filter => filter.Id == id;
             Flight? updateResult = await _flightRepository.UpdateAsync(filter, updatedEntity);
             return updateResult;
+        }
+        public async Task<bool> CheckForeignKey(FlightDto flightDto)
+        {
+            bool isExist = await _flightRepository.CheckAllForeignKeysExistAsync(flightDto);
+            return isExist;
         }
     }
 }

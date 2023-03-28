@@ -1,4 +1,5 @@
 ﻿using airlinecompany.Data.Models;
+using airlinecompany.Data.Models.dto.Flights.dto;
 using System;
 using System.Collections.Generic;
 using System.Linq;
@@ -14,5 +15,6 @@ namespace airlinecompany.Logic.Logics.Flights
         public List<Flight>? Get(string name);
         public Flight? GetSingle(int id);
         public Task<Flight>? UpdateAsync(int id, Flight updatedEntity);
+        public Task<bool> CheckForeignKey(FlightDto flightDto);
     }
 }

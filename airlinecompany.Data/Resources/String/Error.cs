@@ -47,6 +47,7 @@ namespace airlinecompany.Data.Resources.String
         public const string NotUpdatedSessionPassenger = "The session passenger is not updated";
         public const string NotDeletedSessionPassenger = "The session passenger is not deleted";
 
+        public const string ForeignKeyConstraints = "Foreign keys are not in database";
         public const string NotAssignedToken = "The token is not assigned to passenger";
         public const string NotAddedPassenger = "The passenger is not added";
         public const string NotMatchedUser = "The credentials of user is not matched";

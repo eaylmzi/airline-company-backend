@@ -36,17 +36,23 @@ namespace AirlineCompanyAPI.Controllers
 
         }
         [HttpPost]
-        public ActionResult<Response<int>> Add([FromBody] FlightDto flightDto)
+        public async Task<ActionResult<Response<int>>> Add([FromBody] FlightDto flightDto)
         {
             try
             {
-                Flight flight = _mapper.Map<Flight>(flightDto);
-                int flightId = _flightLogic.Add(flight);
-                if (flightId != -1)
+                bool isExist = await _flightLogic.CheckForeignKey(flightDto);
+                if(isExist)
                 {
-                    return Ok(new Response<int> { Message = Success.SuccesfullyAddedFlight, Data = flightId });
+                    Flight flight = _mapper.Map<Flight>(flightDto);
+                    int flightId = _flightLogic.Add(flight);
+                    if (flightId != -1)
+                    {
+                        return Ok(new Response<int> { Message = Success.SuccesfullyAddedFlight, Data = flightId });
+                    }
+                    return Ok(new Response<int> { Message = Error.NotAddedFlight, Data = flightId });
                 }
-                return Ok(new Response<int> { Message = Error.NotAddedFlight, Data = flightId });
+                return BadRequest(new Response<int> { Message = Error.ForeignKeyConstraints, Data = -1 });
+                
             }
             catch (Exception ex)
             {

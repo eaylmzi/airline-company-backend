@@ -9,6 +9,7 @@ using airlinecompany.Data.Repositories.SessionPassengers;
 using airlinecompany.Logic.Logics.Companies;
 using airlinecompany.Logic.Logics.FlightAttendants;
 using airlinecompany.Logic.Logics.Flights;
+using airlinecompany.Logic.Logics.JoinTables;
 using airlinecompany.Logic.Logics.Passengers;
 using airlinecompany.Logic.Logics.Planes;
 using airlinecompany.Logic.Logics.Points;
@@ -28,6 +29,7 @@ var builder = WebApplication.CreateBuilder(args);
 builder.Services.AddScoped<IJwtService, JwtService>();
 builder.Services.AddScoped<IUserService, UserService>();
 builder.Services.AddScoped<ICipherService, CipherService>();
+builder.Services.AddScoped<IJoinTableLogic, JoinTableLogic>();
 
 
 builder.Services.AddScoped<ICompanyLogic, CompanyLogic>();
