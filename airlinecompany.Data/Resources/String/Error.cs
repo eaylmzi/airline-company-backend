@@ -37,6 +37,11 @@ namespace airlinecompany.Data.Resources.String
         public const string NotUpdatedPoint = "The point is not updated";
         public const string NotDeletedPoint = "The point is not deleted";
 
+        public const string NotFoundFlight = "The flight is not found";
+        public const string NotAddedFlight = "The flight is not added";
+        public const string NotUpdatedFlight = "The flight is not updated";
+        public const string NotDeletedFlight = "The flight is not deleted";
+
         public const string NotAssignedToken = "The token is not assigned to passenger";
         public const string NotAddedPassenger = "The passenger is not added";
         public const string NotMatchedUser = "The credentials of user is not matched";

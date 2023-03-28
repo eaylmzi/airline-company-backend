@@ -34,6 +34,12 @@ namespace airlinecompany.Data.Resources.String
         public const string SuccesfullyUpdatedPoint = "The point  is successfully updated";
         public const string SuccesfullyReceivedPoint = "The point  is successfully received";
 
+        public const string SuccesfullyDeletedFlight = "The flight is successfully deleted";
+        public const string SuccesfullyAddedFlight = "The flight  is successfully added";
+        public const string SuccesfullyUpdatedFlight = "The flight  is successfully updated";
+        public const string SuccesfullyReceivedFlight = "The flight  is successfully received";
+
+
         public const string NotFoundCompany = "The company is not found";
     }
 }

@@ -2,6 +2,7 @@
 using airlinecompany.Data.Models.dto.Companies.dto;
 using airlinecompany.Data.Models.dto.Credentials.dto;
 using airlinecompany.Data.Models.dto.FlightAttendant.dto;
+using airlinecompany.Data.Models.dto.Flights.dto;
 using airlinecompany.Data.Models.dto.Passengers.dto;
 using airlinecompany.Data.Models.dto.Planes.dto;
 using airlinecompany.Data.Models.dto.Point.dto;
@@ -30,6 +31,9 @@ namespace AirlineCompanyAPI.Services.Mapper
             CreateMap<Passenger, PassengerDto>();
 
             CreateMap<PointDto, Point>();
+
+            CreateMap<FlightDto, Flight>();
+
 
         }
     }

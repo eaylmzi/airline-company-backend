@@ -37,7 +37,7 @@ namespace AirlineCompanyAPI.Controllers
         {
             try
             {
-                Point isAlreadyAdded = _pointLogic.GetSingleByName(pointDto.Name);
+                Point? isAlreadyAdded = _pointLogic.GetSingleByName(pointDto.Name);
                 if (isAlreadyAdded != null)
                 {
                     return Ok(new Response<int> { Message = Warning.AlreadyAddedPoint, Data = isAlreadyAdded.Id });
