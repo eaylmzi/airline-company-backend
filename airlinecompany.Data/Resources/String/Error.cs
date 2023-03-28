@@ -32,6 +32,11 @@ namespace airlinecompany.Data.Resources.String
         public const string NotUpdatedCompany = "The company is not updated";
         public const string NotDeletedCompany = "The company is not deleted";
 
+        public const string NotFoundPoint = "The point is not found";
+        public const string NotAddedPoint = "The point is not added";
+        public const string NotUpdatedPoint = "The point is not updated";
+        public const string NotDeletedPoint = "The point is not deleted";
+
         public const string NotAssignedToken = "The token is not assigned to passenger";
         public const string NotAddedPassenger = "The passenger is not added";
         public const string NotMatchedUser = "The credentials of user is not matched";

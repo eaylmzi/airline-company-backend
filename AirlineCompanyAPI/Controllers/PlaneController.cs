@@ -16,7 +16,6 @@ namespace WebApplication1.Controllers
     [ApiController]
     public class PlaneController : ControllerBase
     {
-        Plane emptyObject = new Plane();
 
         private readonly IMapper _mapper;
         private readonly IPassengerLogic _passengerLogic;

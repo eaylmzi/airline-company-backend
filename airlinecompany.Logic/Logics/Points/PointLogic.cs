@@ -39,6 +39,12 @@ namespace airlinecompany.Logic.Logics.Points
             Point? getSingleResult = _pointRepository.GetSingle(id);
             return getSingleResult;
         }
+        public Point? GetSingleByName(string name)
+        {
+            Func<Point, bool> getEntity = getEntity => getEntity.Name == name;
+            Point? entity = _pointRepository.GetSingleByMethod(getEntity);
+            return entity;
+        }
 
         public async Task<Point>? UpdateAsync(int id, Point updatedEntity)
         {

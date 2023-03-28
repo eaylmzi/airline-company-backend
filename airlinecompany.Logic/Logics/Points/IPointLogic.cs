@@ -13,6 +13,7 @@ namespace airlinecompany.Logic.Logics.Points
         public bool Delete(int id);
         public List<Point>? Get(string name);
         public Point? GetSingle(int id);
+        public Point? GetSingleByName(string name);
         public Task<Point>? UpdateAsync(int id, Point updatedEntity);
     }
 }

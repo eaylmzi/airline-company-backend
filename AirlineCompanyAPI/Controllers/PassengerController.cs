@@ -23,7 +23,6 @@ namespace AirlineCompanyAPI.Controllers
     [ApiController]
     public class PassengerController : Controller
     {
-        Passenger emptyObject = new Passenger();
         private readonly IMapper _mapper;
         private readonly IJwtService _jwtService;
         private readonly IUserService _userService;

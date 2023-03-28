@@ -16,7 +16,7 @@ namespace AirlineCompanyAPI.Controllers
     [ApiController]
     public class CompanyController : Controller
     {
-        Company emptyObject = new Company();
+        
         private readonly IMapper _mapper;
         private readonly IPassengerLogic _passengerLogic;
         private readonly IPlaneLogic _planeLogic;

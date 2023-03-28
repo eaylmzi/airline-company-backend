@@ -4,6 +4,7 @@ using airlinecompany.Data.Models.dto.Credentials.dto;
 using airlinecompany.Data.Models.dto.FlightAttendant.dto;
 using airlinecompany.Data.Models.dto.Passengers.dto;
 using airlinecompany.Data.Models.dto.Planes.dto;
+using airlinecompany.Data.Models.dto.Point.dto;
 using AirlineCompanyAPI.Services.Jwt;
 using AutoMapper;
 
@@ -27,6 +28,8 @@ namespace AirlineCompanyAPI.Services.Mapper
             CreateMap<Passenger, PassengerSignInDto>();         
             CreateMap<PassengerDto, Passenger>();
             CreateMap<Passenger, PassengerDto>();
+
+            CreateMap<PointDto, Point>();
 
         }
     }
