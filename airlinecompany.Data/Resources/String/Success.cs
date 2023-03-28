@@ -39,6 +39,12 @@ namespace airlinecompany.Data.Resources.String
         public const string SuccesfullyUpdatedFlight = "The flight  is successfully updated";
         public const string SuccesfullyReceivedFlight = "The flight  is successfully received";
 
+        public const string SuccesfullyDeletedSessionPassenger = "The session passenger is successfully deleted";
+        public const string SuccesfullyAddedSessionPassenger = "The session passenger  is successfully added";
+        public const string SuccesfullyUpdatedSessionPassenger = "The session passenger  is successfully updated";
+        public const string SuccesfullyReceivedSessionPassenger  = "The session passenger  is successfully received";
+
+
 
         public const string NotFoundCompany = "The company is not found";
     }

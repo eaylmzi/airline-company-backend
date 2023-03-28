@@ -6,6 +6,7 @@ using airlinecompany.Data.Models.dto.Flights.dto;
 using airlinecompany.Data.Models.dto.Passengers.dto;
 using airlinecompany.Data.Models.dto.Planes.dto;
 using airlinecompany.Data.Models.dto.Point.dto;
+using airlinecompany.Data.Models.dto.SessionPassenger.dto;
 using AirlineCompanyAPI.Services.Jwt;
 using AutoMapper;
 
@@ -33,6 +34,8 @@ namespace AirlineCompanyAPI.Services.Mapper
             CreateMap<PointDto, Point>();
 
             CreateMap<FlightDto, Flight>();
+
+            CreateMap<SessionPassengerDto, SessionPassenger>();
 
 
         }
