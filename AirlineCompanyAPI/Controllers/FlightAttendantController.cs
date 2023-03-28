@@ -9,6 +9,7 @@ using Microsoft.AspNetCore.Mvc;
 using airlinecompany.Logic.Logics.FlightAttendants;
 using airlinecompany.Data.Models.dto.FlightAttendant.dto;
 using airlinecompany.Data.Resources.String;
+using airlinecompany.Data.Models.dto;
 
 namespace AirlineCompanyAPI.Controllers
 {
@@ -36,7 +37,7 @@ namespace AirlineCompanyAPI.Controllers
 
         }
         [HttpPost]
-        public ActionResult<IdDto> Add([FromBody] FlightAttendantDto flightAttendantDto)
+        public ActionResult<Response<int>> Add([FromBody] FlightAttendantDto flightAttendantDto)
         {
             try
             {
@@ -44,7 +45,13 @@ namespace AirlineCompanyAPI.Controllers
                 if (isCompanyFound != null)
                 {
                     FlightAttendant flightAttendant = _mapper.Map<FlightAttendant>(flightAttendantDto);
-                    return new IdDto { Id = _flightAttendantLogic.Add(flightAttendant) };
+                    int flightAttendantId = _flightAttendantLogic.Add(flightAttendant);
+                    if(flightAttendantId != -1)
+                    {
+                        return Ok(new Response<int> { Message = Success.SuccesfullyAddedFlightAttendant, Data = flightAttendantId });
+                    }
+                    return Ok(new Response<int> { Message = Error.NotAddedFlightAttendant, Data = flightAttendantId });
+
                 }
                 return BadRequest(Error.NotFoundCompany);
             }
@@ -54,11 +61,17 @@ namespace AirlineCompanyAPI.Controllers
             }
         }
         [HttpPost]
-        public ActionResult<BooleanDto> Delete([FromBody] IdDto idDto)
+        public ActionResult<Response<bool>> Delete([FromBody] IdDto idDto)
         {
             try
             {
-                return new BooleanDto { isHappened = _flightAttendantLogic.Delete(idDto.Id) };
+                bool isDeleted = _flightAttendantLogic.Delete(idDto.Id);
+                if (isDeleted)
+                {
+                    return Ok(new Response<bool> { Message = Success.SuccesfullyDeletedFlightAttendant, Data = isDeleted });
+                }
+                return Ok(new Response<bool> { Message = Error.NotDeletedFlightAttendant, Data = isDeleted });
+
             }
             catch (Exception ex)
             {
@@ -66,16 +79,16 @@ namespace AirlineCompanyAPI.Controllers
             }
         }
         [HttpPost]
-        public ActionResult<FlightAttendant> Get([FromBody] IdDto idDto)
+        public ActionResult<Response<FlightAttendant>> Get([FromBody] IdDto idDto)
         {
             try
             {
                 FlightAttendant? flightAttendant = _flightAttendantLogic.GetSingle(idDto.Id);
                 if (flightAttendant != null)
                 {
-                    return Ok(flightAttendant);
+                    return Ok(new Response<FlightAttendant> { Message = Success.SuccesfullyReceivedFlightAttendant, Data = flightAttendant });
                 }
-                return Ok(emptyObject);
+                return Ok(new Response<FlightAttendant> { Message = Error.NotDeletedFlightAttendant, Data = new FlightAttendant() });
             }
             catch (Exception ex)
             {
@@ -83,7 +96,7 @@ namespace AirlineCompanyAPI.Controllers
             }
         }
         [HttpPost]
-        public async Task<ActionResult<FlightAttendant>> Update([FromBody] FlightAttendant flightAttendant)
+        public async Task<ActionResult<Response<FlightAttendant>>> Update([FromBody] FlightAttendant flightAttendant)
         {
             try
             {
@@ -93,12 +106,12 @@ namespace AirlineCompanyAPI.Controllers
                     FlightAttendant? updatedFlightAttendant = await _flightAttendantLogic.UpdateAsync(flightAttendant.Id, flightAttendant);
                     if (updatedFlightAttendant != null)
                     {
-                        return Ok(updatedFlightAttendant);
+                        return Ok(new Response<FlightAttendant> { Message = Success.SuccesfullyUpdatedFlightAttendant, Data = updatedFlightAttendant });
                     }
 
-                    return Ok(emptyObject);
+                    return Ok(new Response<FlightAttendant> { Message = Error.NotUpdatedFlightAttendant, Data = new FlightAttendant() });
                 }
-                return BadRequest(Error.NotFoundCompany);
+                return Ok(new Response<FlightAttendant> { Message = Error.NotFoundCompany, Data = new FlightAttendant() });
 
             }
             catch (Exception ex)

@@ -104,7 +104,7 @@ namespace AirlineCompanyAPI.Controllers
                     {
                         return Ok(new Response<bool> { Message = Success.SuccesfullyDeletedPassenger, Data = isDeleted });
                     }
-                    return BadRequest(new Response<bool> { Message = Error.NotDeletedPassenger, Data = isDeleted });
+                    return Ok(new Response<bool> { Message = Error.NotDeletedPassenger, Data = isDeleted });
                 }
                 return BadRequest(Error.NotMatchedUser);
             }

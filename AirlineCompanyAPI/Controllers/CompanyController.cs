@@ -1,7 +1,9 @@
 ﻿using airlinecompany.Data.Models;
+using airlinecompany.Data.Models.dto;
 using airlinecompany.Data.Models.dto.Companies.dto;
 using airlinecompany.Data.Models.dto.Credentials.dto;
 using airlinecompany.Data.Models.dto.Planes.dto;
+using airlinecompany.Data.Resources.String;
 using airlinecompany.Logic.Logics.Companies;
 using airlinecompany.Logic.Logics.Passengers;
 using airlinecompany.Logic.Logics.Planes;
@@ -31,13 +33,18 @@ namespace AirlineCompanyAPI.Controllers
 
         }
         [HttpPost]
-        public ActionResult<IdDto> Add([FromBody] CompanyDto companyDto)
+        public ActionResult<Response<int>> Add([FromBody] CompanyDto companyDto)
         {
             try
             {
                 Company company = _mapper.Map<Company>(companyDto);
                 company.TotalMoney = 0;
-                return new IdDto { Id = _companyLogic.Add(company) };
+                int companyId = _companyLogic.Add(company);
+                if(companyId != -1)
+                {
+                    return Ok(new Response<int> { Message = Success.SuccesfullyAddedCompany, Data = companyId });
+                }
+                return Ok(new Response<int> { Message = Error.NotAddedCompany, Data = companyId });
             }
             catch (Exception ex)
             {
@@ -45,11 +52,17 @@ namespace AirlineCompanyAPI.Controllers
             }
         }
         [HttpPost]
-        public ActionResult<BooleanDto> Delete([FromBody] IdDto idDto)
+        public ActionResult<Response<bool>> Delete([FromBody] IdDto idDto)
         {
             try
             {
-                return new BooleanDto { isHappened = _companyLogic.Delete(idDto.Id) };
+                bool isDeleted = _companyLogic.Delete(idDto.Id);
+                if (isDeleted)
+                {
+                    return Ok(new Response<bool> { Message = Success.SuccesfullyDeletedCompany, Data = isDeleted });
+                }
+                return Ok(new Response<bool> { Message = Error.NotDeletedCompany, Data = isDeleted });
+
             }
             catch (Exception ex)
             {
@@ -57,16 +70,16 @@ namespace AirlineCompanyAPI.Controllers
             }
         }
         [HttpPost]
-        public ActionResult<Company> Get([FromBody] IdDto idDto)
+        public ActionResult<Response<Company>> Get([FromBody] IdDto idDto)
         {
             try
             {
                 Company? company = _companyLogic.GetSingle(idDto.Id);
                 if (company != null)
                 {
-                    return Ok(company);
+                    return Ok(new Response<Company> { Message = Success.SuccesfullyAddedCompany, Data = company});
                 }
-                return Ok(emptyObject);
+                return Ok(new Response<Company> { Message = Error.NotFoundCompany, Data = new Company() });
             }
             catch (Exception ex)
             {
@@ -74,7 +87,7 @@ namespace AirlineCompanyAPI.Controllers
             }
         }
         [HttpPost]
-        public async Task<ActionResult<Company>> Update([FromBody] IdNameDto updatedEntity)
+        public async Task<ActionResult<Response<Company>>> Update([FromBody] IdNameDto updatedEntity)
         {
             try
             {
@@ -85,11 +98,12 @@ namespace AirlineCompanyAPI.Controllers
                     Company? updatedCompany = await _companyLogic.UpdateAsync(updatedEntity.Id, newCompany);
                     if (updatedCompany != null)
                     {
-                        return Ok(updatedCompany);
+                        return Ok(new Response<Company> { Message = Success.SuccesfullyUpdatedCompany, Data = updatedCompany });
                     }
+                    return Ok(new Response<Company> { Message = Error.NotUpdatedCompany, Data = new Company() });
                 }
                 
-                return Ok(emptyObject);
+                return Ok(new Response<Company> { Message = Error.NotUpdatedCompany, Data = new Company() });
             }
             catch (Exception ex)
             {

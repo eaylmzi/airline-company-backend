@@ -1,11 +1,14 @@
 using airlinecompany.Data.Models;
+using airlinecompany.Data.Models.dto;
 using airlinecompany.Data.Models.dto.Credentials.dto;
 using airlinecompany.Data.Models.dto.Planes.dto;
+using airlinecompany.Data.Resources.String;
 using airlinecompany.Logic.Logics.Passengers;
 using airlinecompany.Logic.Logics.Planes;
 using AutoMapper;
 using Microsoft.AspNetCore.Mvc;
 using System.Data;
+
 
 namespace WebApplication1.Controllers
 {
@@ -29,12 +32,17 @@ namespace WebApplication1.Controllers
         //  [HttpPost, Authorize(Roles = $"{Roles.Driver},{Roles.Admin},{Roles.SuperAdmin}")]
 
         [HttpPost]
-        public ActionResult<IdDto> Add([FromBody]PlaneDto planeDto)
+        public ActionResult<Response<int>> Add([FromBody]PlaneDto planeDto)
         {
             try
             {
                 Plane plane = _mapper.Map<Plane>(planeDto);
-                return new IdDto { Id = _planeLogic.Add(plane) };              
+                int planeId = _planeLogic.Add(plane);
+                if(planeId != -1)
+                {
+                    return Ok(new Response<int> { Message = Success.SuccesfullyAddedPlane, Data = planeId });
+                }
+                return Ok(new Response<int> { Message = Error.NotAddedPlane , Data = planeId});              
             }
             catch (Exception ex)
             {
@@ -42,11 +50,16 @@ namespace WebApplication1.Controllers
             }
         }
         [HttpPost]
-        public ActionResult<BooleanDto> Delete([FromBody] IdDto idDto)
+        public ActionResult<Response<bool>> Delete([FromBody] IdDto idDto)
         {
             try
             {
-                return new BooleanDto { isHappened = _planeLogic.Delete(idDto.Id) };
+                bool isDeleted = _planeLogic.Delete(idDto.Id);
+                if (isDeleted)
+                {
+                    return Ok(new Response<bool> { Message = Success.SuccesfullyDeletedPlane, Data = isDeleted });
+                }
+                return Ok(new Response<bool> { Message = Error.NotDeletedPlane, Data = isDeleted });
             }
             catch (Exception ex)
             {
@@ -54,16 +67,16 @@ namespace WebApplication1.Controllers
             }
         }
         [HttpPost]
-        public ActionResult<Plane> Get([FromBody] IdDto idDto)
+        public ActionResult<Response<Plane>> Get([FromBody] IdDto idDto)
         {
             try
             {
                 Plane? plane = _planeLogic.GetSingle(idDto.Id);
                 if(plane != null)
                 {
-                    return Ok(plane);
+                    return Ok(new Response<Plane> { Message = Success.SuccesfullyReceivedPlane, Data = plane });
                 }
-                return Ok(emptyObject);
+                return Ok(new Response<Plane> { Message = Error.NotAddedPlane, Data = new Plane() });
             }
             catch (Exception ex)
             {
@@ -71,16 +84,16 @@ namespace WebApplication1.Controllers
             }
         }
         [HttpPost]
-        public async Task<ActionResult<Plane>> Update([FromBody] Plane updatedEntity)
+        public async Task<ActionResult<Response<Plane>>> Update([FromBody] Plane updatedEntity)
         {
             try
             {
                 Plane? updatedPlane = await _planeLogic.UpdateAsync(updatedEntity.Id, updatedEntity);
                 if (updatedPlane != null)
                 {
-                    return Ok(updatedPlane);
+                    return Ok(new Response<Plane> { Message = Success.SuccesfullyUpdatedPlane, Data = updatedPlane });
                 }
-                return Ok(emptyObject);
+                return Ok(new Response<Plane> { Message = Error.NotUpdatedPlane, Data = new Plane() });
             }
             catch (Exception ex)
             {
