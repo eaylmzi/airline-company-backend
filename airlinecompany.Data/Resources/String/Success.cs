@@ -14,10 +14,10 @@ namespace airlinecompany.Data.Resources.String
         public const string SuccesfullyAddedPassenger = "The passenger is successfully added";
         public const string SuccesfullyUpdatedPassenger = "The passenger is successfully updated";
 
-        public const string SuccesfullyDeletedPlane = "The passenger is successfully deleted";
-        public const string SuccesfullyAddedPlane = "The passenger is successfully added";
-        public const string SuccesfullyUpdatedPlane = "The passenger is successfully updated";
-        public const string SuccesfullyReceivedPlane = "The passenger is successfully received";
+        public const string SuccesfullyDeletedPlane = "The plane is successfully deleted";
+        public const string SuccesfullyAddedPlane = "The plane is successfully added";
+        public const string SuccesfullyUpdatedPlane = "The plane is successfully updated";
+        public const string SuccesfullyReceivedPlane = "The plane is successfully received";
 
         public const string SuccesfullyDeletedFlightAttendant = "The flight attendant is successfully deleted";
         public const string SuccesfullyAddedFlightAttendant = "The flight attendant  is successfully added";

@@ -21,26 +21,31 @@ namespace airlinecompany.Data.Resources.String
         public const string NotAddedPlane = "The plane is not added";
         public const string NotUpdatedPlane = "The plane is not updated";
         public const string NotDeletedPlane = "The plane is not deleted";
+        public const string NotAvailablePlane = "The plane is not available, it has a flight";
 
         public const string NotFoundFlightAttendant = "The flight attendant is not found";
         public const string NotAddedFlightAttendant = "The flight attendant is not added";
         public const string NotUpdatedFlightAttendant = "The flight attendant is not updated";
         public const string NotDeletedFlightAttendant = "The flight attendant is not deleted";
+        public const string NotAvailableFlightAttendant = "The flight attendant is not available, it has a flight";
 
         public const string NotFoundCompany = "The company is not found";
         public const string NotAddedCompany = "The company is not added";
         public const string NotUpdatedCompany = "The company is not updated";
         public const string NotDeletedCompany = "The company is not deleted";
+        public const string NotAvailableCompany = "The company is not available, it has a flight";
 
         public const string NotFoundPoint = "The point is not found";
         public const string NotAddedPoint = "The point is not added";
         public const string NotUpdatedPoint = "The point is not updated";
         public const string NotDeletedPoint = "The point is not deleted";
+        public const string NotAvailablePoint = "The point is not available, flight includes that point";
 
         public const string NotFoundFlight = "The flight is not found";
         public const string NotAddedFlight = "The flight is not added";
         public const string NotUpdatedFlight = "The flight is not updated";
         public const string NotDeletedFlight = "The flight is not deleted";
+        public const string NotAvailableFlight = "The flight is not available, it has a flight";
 
         public const string NotFoundSessionPassenger = "The session passenger is not found";
         public const string NotAddedSessionPassenger = "The session passenger is not added";

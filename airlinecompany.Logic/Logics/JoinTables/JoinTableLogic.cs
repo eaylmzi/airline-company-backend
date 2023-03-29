@@ -59,5 +59,35 @@ namespace airlinecompany.Logic.Logics.JoinTables
 
         }
         */
+        /*
+        public List<Flight> CheckPlaneAvaibalityJoinTables(int planeId)
+
+        {
+
+            var result = (from t1 in PlaneTable
+                          join t2 in FlightTable on t1.Id equals t2.PlaneNumber
+                          where t1.Id == t2.PlaneNumber
+
+                          select new Flight
+                          {
+                              Id = t2.Id,
+                              CompanyId = t2.CompanyId,
+                              PlaneNumber = t2.PlaneNumber,
+                              FlightNumber = t2.FlightNumber,
+                              Price = t2.Price,
+                              StartPoint = t2.StartPoint,   
+                              FinalPoint = t2.FinalPoint,
+                              Date = t2.Date,
+                              FlightAttendantId = t2.FlightAttendantId
+                          }).ToList();
+
+
+
+
+            return result;
+
+
+        }
+        */
     }
 }

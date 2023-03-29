@@ -11,5 +11,6 @@ namespace airlinecompany.Data.Repositories.Flights
     public interface IFlightRepository : IRepositoryBase<Flight>
     {
         public Task<bool> CheckAllForeignKeysExistAsync(FlightDto flightDto);
+        public bool CheckAvailabality(int flightId);
     }
 }

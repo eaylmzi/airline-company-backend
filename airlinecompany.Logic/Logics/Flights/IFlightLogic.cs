@@ -16,5 +16,6 @@ namespace airlinecompany.Logic.Logics.Flights
         public Flight? GetSingle(int id);
         public Task<Flight>? UpdateAsync(int id, Flight updatedEntity);
         public Task<bool> CheckForeignKey(FlightDto flightDto);
+        public bool CheckAvailabality(int flightId);
     }
 }

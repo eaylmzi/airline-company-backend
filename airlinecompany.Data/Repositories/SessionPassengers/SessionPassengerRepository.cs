@@ -1,4 +1,5 @@
 ﻿using airlinecompany.Data.Models;
+using Microsoft.EntityFrameworkCore;
 using System;
 using System.Collections.Generic;
 using System.Linq;
@@ -9,5 +10,6 @@ namespace airlinecompany.Data.Repositories.SessionPassengers
 {
     public class SessionPassengerRepository : RepositoryBase<SessionPassenger>, ISessionPassengerRepository
     {
+
     }
 }

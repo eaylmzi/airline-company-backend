@@ -1,6 +1,7 @@
 ﻿using airlinecompany.Data.Models;
 using airlinecompany.Data.Repositories.Passengers;
 using airlinecompany.Data.Repositories.Planes;
+using AutoMapper.Execution;
 using System;
 using System.Collections.Generic;
 using System.Linq;
@@ -45,6 +46,11 @@ namespace airlinecompany.Logic.Logics.Planes
             Func<Plane, bool> filter = filter => filter.Id == id;
             Plane? updateResult = await _planeRepository.UpdateAsync(filter, updatedEntity);
             return updateResult;
+        }
+        public bool CheckAvailabality(int planeId)
+        {
+            bool isBusy = _planeRepository.CheckAvailabality(planeId);
+            return isBusy;          
         }
     }
 }

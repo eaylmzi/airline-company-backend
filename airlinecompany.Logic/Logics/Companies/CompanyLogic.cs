@@ -46,5 +46,10 @@ namespace airlinecompany.Logic.Logics.Companies
             Company? updateResult = await _companyRepository.UpdateAsync(filter, updatedEntity);
             return updateResult;
         }
+        public bool CheckAvailabality(int companyId)
+        {
+            bool isBusy = _companyRepository.CheckAvailabality(companyId);
+            return isBusy;
+        }
     }
 }

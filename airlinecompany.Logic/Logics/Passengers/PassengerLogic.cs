@@ -57,5 +57,6 @@ namespace airlinecompany.Logic.Logics.Passengers
             Passenger? updateResult = await _passengerRepository.UpdateAsync(entity, updatedEntity);
             return updateResult;
         }
+
     }
 }

@@ -3,10 +3,12 @@ using airlinecompany.Data.Models.dto;
 using airlinecompany.Data.Models.dto.Credentials.dto;
 using airlinecompany.Data.Models.dto.Planes.dto;
 using airlinecompany.Data.Resources.String;
+using airlinecompany.Logic.Logics.JoinTables;
 using airlinecompany.Logic.Logics.Passengers;
 using airlinecompany.Logic.Logics.Planes;
 using AutoMapper;
 using Microsoft.AspNetCore.Mvc;
+using MimeKit.Cryptography;
 using System.Data;
 
 
@@ -20,12 +22,15 @@ namespace WebApplication1.Controllers
         private readonly IMapper _mapper;
         private readonly IPassengerLogic _passengerLogic;
         private readonly IPlaneLogic _planeLogic;
+        private readonly IJoinTableLogic _joinTableLogic;
 
 
-        public PlaneController(IMapper mapper, IPassengerLogic passengerLogic, IPlaneLogic planeLogic)
+
+        public PlaneController(IMapper mapper, IPassengerLogic passengerLogic, IPlaneLogic planeLogic, IJoinTableLogic joinTableLogic)
         {
             _passengerLogic = passengerLogic;
             _planeLogic = planeLogic;
+            _joinTableLogic = joinTableLogic;
             _mapper = mapper;
         }
         //  [HttpPost, Authorize(Roles = $"{Roles.Driver},{Roles.Admin},{Roles.SuperAdmin}")]
@@ -53,12 +58,18 @@ namespace WebApplication1.Controllers
         {
             try
             {
-                bool isDeleted = _planeLogic.Delete(idDto.Id);
-                if (isDeleted)
+                bool isBusy = _planeLogic.CheckAvailabality(idDto.Id);
+                if(!isBusy)
                 {
-                    return Ok(new Response<bool> { Message = Success.SuccesfullyDeletedPlane, Data = isDeleted });
+                    bool isDeleted = _planeLogic.Delete(idDto.Id);
+                    if (isDeleted)
+                    {
+                        return Ok(new Response<bool> { Message = Success.SuccesfullyDeletedPlane, Data = isDeleted });
+                    }
+                    return Ok(new Response<bool> { Message = Error.NotDeletedPlane, Data = isDeleted });
                 }
-                return Ok(new Response<bool> { Message = Error.NotDeletedPlane, Data = isDeleted });
+                return Ok(new Response<bool> { Message = Error.NotAvailablePlane, Data = !isBusy });
+
             }
             catch (Exception ex)
             {

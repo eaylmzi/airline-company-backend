@@ -9,5 +9,6 @@ namespace airlinecompany.Data.Repositories.FlightAttendants
 {
     public interface IFlightAttendantRepository : IRepositoryBase<FlightAttendant>
     {
+        public bool CheckAvailabality(int flightAttendantId);
     }
 }

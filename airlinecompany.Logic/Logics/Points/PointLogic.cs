@@ -52,5 +52,10 @@ namespace airlinecompany.Logic.Logics.Points
             Point? updateResult = await _pointRepository.UpdateAsync(filter, updatedEntity);
             return updateResult;
         }
+        public bool CheckAvailabality(int pointId)
+        {
+            bool isBusy = _pointRepository.CheckAvailabality(pointId);
+            return isBusy;
+        }
     }
 }

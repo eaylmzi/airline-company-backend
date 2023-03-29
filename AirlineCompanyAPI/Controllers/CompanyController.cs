@@ -56,12 +56,18 @@ namespace AirlineCompanyAPI.Controllers
         {
             try
             {
-                bool isDeleted = _companyLogic.Delete(idDto.Id);
-                if (isDeleted)
+                bool isBusy = _companyLogic.CheckAvailabality(idDto.Id);
+                if (!isBusy)
                 {
-                    return Ok(new Response<bool> { Message = Success.SuccesfullyDeletedCompany, Data = isDeleted });
+                    bool isDeleted = _companyLogic.Delete(idDto.Id);
+                    if (isDeleted)
+                    {
+                        return Ok(new Response<bool> { Message = Success.SuccesfullyDeletedCompany, Data = isDeleted });
+                    }
+                    return Ok(new Response<bool> { Message = Error.NotDeletedCompany, Data = isDeleted });
                 }
-                return Ok(new Response<bool> { Message = Error.NotDeletedCompany, Data = isDeleted });
+                return Ok(new Response<bool> { Message = Error.NotAvailableCompany, Data = !isBusy });
+
 
             }
             catch (Exception ex)

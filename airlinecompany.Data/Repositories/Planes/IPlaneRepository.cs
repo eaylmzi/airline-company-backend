@@ -9,5 +9,6 @@ namespace airlinecompany.Data.Repositories.Planes
 {
     public interface IPlaneRepository :  IRepositoryBase<Plane>
     {
+        public bool CheckAvailabality(int planeId);
     }
 }

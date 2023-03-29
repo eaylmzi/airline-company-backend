@@ -15,5 +15,6 @@ namespace airlinecompany.Logic.Logics.Points
         public Point? GetSingle(int id);
         public Point? GetSingleByName(string name);
         public Task<Point>? UpdateAsync(int id, Point updatedEntity);
+        public bool CheckAvailabality(int pointId);
     }
 }

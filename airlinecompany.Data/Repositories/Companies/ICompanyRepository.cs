@@ -9,5 +9,6 @@ namespace airlinecompany.Data.Repositories.Companies
 {
     public interface ICompanyRepository : IRepositoryBase<Company>
     {
+        public bool CheckAvailabality(int companyId);
     }
 }

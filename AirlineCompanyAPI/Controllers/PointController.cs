@@ -60,12 +60,18 @@ namespace AirlineCompanyAPI.Controllers
         {
             try
             {
-                bool isDeleted = _pointLogic.Delete(idDto.Id);
-                if (isDeleted)
+                bool isBusy = _pointLogic.CheckAvailabality(idDto.Id);
+                if (!isBusy)
                 {
-                    return Ok(new Response<bool> { Message = Success.SuccesfullyDeletedPoint, Data = isDeleted });
+                    bool isDeleted = _pointLogic.Delete(idDto.Id);
+                    if (isDeleted)
+                    {
+                        return Ok(new Response<bool> { Message = Success.SuccesfullyDeletedPoint, Data = isDeleted });
+                    }
+                    return Ok(new Response<bool> { Message = Error.NotDeletedPoint, Data = isDeleted });
                 }
-                return Ok(new Response<bool> { Message = Error.NotDeletedPoint, Data = isDeleted });
+                return Ok(new Response<bool> { Message = Error.NotAvailablePoint, Data = !isBusy });
+
             }
             catch (Exception ex)
             {

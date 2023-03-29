@@ -14,5 +14,6 @@ namespace airlinecompany.Logic.Logics.Planes
         public List<Plane>? Get(string name);
         public Plane? GetSingle(int id);
         public Task<Plane>? UpdateAsync(int id, Plane updatedEntity);
+        public bool CheckAvailabality(int planeId);
     }
 }

@@ -52,5 +52,10 @@ namespace airlinecompany.Logic.Logics.Flights
             bool isExist = await _flightRepository.CheckAllForeignKeysExistAsync(flightDto);
             return isExist;
         }
+        public bool CheckAvailabality(int flightId)
+        {
+            bool isBusy = _flightRepository.CheckAvailabality(flightId);
+            return isBusy;
+        }
     }
 }

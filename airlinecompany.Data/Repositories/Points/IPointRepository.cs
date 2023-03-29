@@ -9,5 +9,6 @@ namespace airlinecompany.Data.Repositories.Points
 {
     public interface IPointRepository : IRepositoryBase<Point>
     {
+        public bool CheckAvailabality(int companyId);
     }
 }

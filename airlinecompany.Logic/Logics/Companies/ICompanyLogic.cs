@@ -14,5 +14,6 @@ namespace airlinecompany.Logic.Logics.Companies
         public List<Company>? Get(string name);
         public Company? GetSingle(int id);
         public Task<Company>? UpdateAsync(int id, Company updatedEntity);
+        public bool CheckAvailabality(int companyId);
     }
 }

@@ -46,5 +46,6 @@ namespace airlinecompany.Logic.Logics.SessionPassengers
             SessionPassenger? updateResult = await _sessionPassengerRepository.UpdateAsync(filter, updatedEntity);
             return updateResult;
         }
+
     }
 }

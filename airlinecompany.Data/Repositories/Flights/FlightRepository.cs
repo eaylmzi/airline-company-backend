@@ -28,5 +28,14 @@ namespace airlinecompany.Data.Repositories.Flights
                 && await _context.Set<FlightAttendant>().AnyAsync(fp => fp.Id == flightDto.FinalPoint)
                 && await _context.Set<FlightAttendant>().AnyAsync(fp => fp.CompanyId == flightDto.CompanyId);
         }
+        public bool CheckAvailabality(int flightId)
+        {
+            bool isBusy = _context.Set<SessionPassenger>().Any(p => p.FlightId == flightId);
+            if (isBusy)
+            {
+                return true;
+            }
+            return false;
+        }
     }
 }

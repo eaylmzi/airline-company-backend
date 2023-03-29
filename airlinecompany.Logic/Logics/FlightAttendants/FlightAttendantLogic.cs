@@ -46,5 +46,10 @@ namespace airlinecompany.Logic.Logics.FlightAttendants
             FlightAttendant? updateResult = await _flightAttendantRepository.UpdateAsync(filter, updatedEntity);
             return updateResult;
         }
+        public bool CheckAvailabality(int flightAttendantId)
+        {
+            bool isBusy = _flightAttendantRepository.CheckAvailabality(flightAttendantId);
+            return isBusy;
+        }
     }
 }

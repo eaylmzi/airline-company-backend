@@ -64,12 +64,17 @@ namespace AirlineCompanyAPI.Controllers
         {
             try
             {
-                bool isDeleted = _flightLogic.Delete(idDto.Id);
-                if (isDeleted)
+                bool isBusy = _flightLogic.CheckAvailabality(idDto.Id);
+                if (!isBusy)
                 {
-                    return Ok(new Response<bool> { Message = Success.SuccesfullyDeletedFlight, Data = isDeleted });
+                    bool isDeleted = _flightLogic.Delete(idDto.Id);
+                    if (isDeleted)
+                    {
+                        return Ok(new Response<bool> { Message = Success.SuccesfullyDeletedFlight, Data = isDeleted });
+                    }
+                    return Ok(new Response<bool> { Message = Error.NotDeletedFlight, Data = isDeleted });
                 }
-                return Ok(new Response<bool> { Message = Error.NotDeletedFlight, Data = isDeleted });
+                return Ok(new Response<bool> { Message = Error.NotAvailableFlight, Data = !isBusy });
 
             }
             catch (Exception ex)

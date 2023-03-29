@@ -14,5 +14,6 @@ namespace airlinecompany.Logic.Logics.FlightAttendants
         public List<FlightAttendant>? Get(string name);
         public FlightAttendant? GetSingle(int id);
         public Task<FlightAttendant>? UpdateAsync(int id, FlightAttendant updatedEntity);
+        public bool CheckAvailabality(int flightAttendantId);
     }
 }
