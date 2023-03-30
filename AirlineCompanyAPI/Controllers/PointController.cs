@@ -9,6 +9,8 @@ using Microsoft.AspNetCore.Mvc;
 using airlinecompany.Data.Models;
 using airlinecompany.Logic.Logics.Points;
 using airlinecompany.Data.Models.dto.Point.dto;
+using Microsoft.AspNetCore.Authorization;
+using System.Data;
 
 namespace AirlineCompanyAPI.Controllers
 {
@@ -32,7 +34,7 @@ namespace AirlineCompanyAPI.Controllers
         }
         //  [HttpPost, Authorize(Roles = $"{Roles.Driver},{Roles.Admin},{Roles.SuperAdmin}")]
 
-        [HttpPost]
+        [HttpPost, Authorize(Roles = $"{Role.SuperAdmin}")]
         public ActionResult<Response<int>> Add([FromBody] PointDto pointDto)
         {
             try
@@ -55,7 +57,7 @@ namespace AirlineCompanyAPI.Controllers
                 return BadRequest(ex.Message);
             }
         }
-        [HttpPost]
+        [HttpPost, Authorize(Roles = $"{Role.SuperAdmin}")]
         public ActionResult<Response<bool>> Delete([FromBody] IdDto idDto)
         {
             try
@@ -78,7 +80,7 @@ namespace AirlineCompanyAPI.Controllers
                 return BadRequest(ex.Message);
             }
         }
-        [HttpPost]
+        [HttpPost, Authorize(Roles = $"{Role.SuperAdmin}")]
         public ActionResult<Response<Point>> Get([FromBody] IdDto idDto)
         {
             try
@@ -95,7 +97,7 @@ namespace AirlineCompanyAPI.Controllers
                 return BadRequest(ex.Message);
             }
         }
-        [HttpPost]
+        [HttpPost, Authorize(Roles = $"{Role.SuperAdmin}")]
         public async Task<ActionResult<Response<Point>>> Update([FromBody] Point updatedEntity)
         {
             try

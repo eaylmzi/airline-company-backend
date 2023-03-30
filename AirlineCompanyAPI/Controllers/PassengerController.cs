@@ -115,9 +115,9 @@ namespace AirlineCompanyAPI.Controllers
 
 
 
-
+            
         }
-        [HttpPost]
+        [HttpPost, Authorize(Roles = $"{Role.Passenger},{Role.SuperAdmin}")]
         public ActionResult<Response<Passenger>> Get([FromBody] IdDto idDto)
         {
             try

@@ -12,5 +12,7 @@ namespace AirlineCompanyAPI.Services.Jwt
         public string GetUserNameFromToken(IHeaderDictionary headers);
         public string GetUserRoleFromToken(IHeaderDictionary headers);
         public PassengerVerifying GetUserInformation(IHeaderDictionary headers);
+
+
     }
 }

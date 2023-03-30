@@ -9,6 +9,8 @@ using Microsoft.AspNetCore.Mvc;
 using airlinecompany.Logic.Logics.SessionPassengers;
 using airlinecompany.Data.Models.dto.SessionPassenger.dto;
 using airlinecompany.Data.Models;
+using Microsoft.AspNetCore.Authorization;
+using System.Data;
 
 namespace AirlineCompanyAPI.Controllers
 {
@@ -33,7 +35,7 @@ namespace AirlineCompanyAPI.Controllers
         }
         //  [HttpPost, Authorize(Roles = $"{Roles.Driver},{Roles.Admin},{Roles.SuperAdmin}")]
 
-        [HttpPost]
+        [HttpPost, Authorize(Roles = $"{Role.SuperAdmin}")]
         public ActionResult<Response<int>> Add([FromBody] SessionPassengerDto sessionPassengerDto)
         {
             try
@@ -51,7 +53,7 @@ namespace AirlineCompanyAPI.Controllers
                 return BadRequest(ex.Message);
             }
         }
-        [HttpPost]
+        [HttpPost, Authorize(Roles = $"{Role.SuperAdmin}")]
         public ActionResult<Response<bool>> Delete([FromBody] IdDto idDto)
         {
             try
@@ -68,7 +70,7 @@ namespace AirlineCompanyAPI.Controllers
                 return BadRequest(ex.Message);
             }
         }
-        [HttpPost]
+        [HttpPost, Authorize(Roles = $"{Role.SuperAdmin}")]
         public ActionResult<Response<SessionPassenger>> Get([FromBody] IdDto idDto)
         {
             try
@@ -85,7 +87,7 @@ namespace AirlineCompanyAPI.Controllers
                 return BadRequest(ex.Message);
             }
         }
-        [HttpPost]
+        [HttpPost, Authorize(Roles = $"{Role.SuperAdmin}")]
         public async Task<ActionResult<Response<SessionPassenger>>> Update([FromBody] SessionPassenger updatedEntity)
         {
             try

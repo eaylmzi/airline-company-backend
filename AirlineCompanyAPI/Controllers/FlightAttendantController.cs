@@ -10,6 +10,8 @@ using airlinecompany.Logic.Logics.FlightAttendants;
 using airlinecompany.Data.Models.dto.FlightAttendant.dto;
 using airlinecompany.Data.Resources.String;
 using airlinecompany.Data.Models.dto;
+using Microsoft.AspNetCore.Authorization;
+using System.Data;
 
 namespace AirlineCompanyAPI.Controllers
 {
@@ -36,7 +38,7 @@ namespace AirlineCompanyAPI.Controllers
 
 
         }
-        [HttpPost]
+        [HttpPost, Authorize(Roles = $"{Role.SuperAdmin}")]
         public ActionResult<Response<int>> Add([FromBody] FlightAttendantDto flightAttendantDto)
         {
             try
@@ -60,7 +62,7 @@ namespace AirlineCompanyAPI.Controllers
                 return BadRequest(ex.Message);
             }
         }
-        [HttpPost]
+        [HttpPost, Authorize(Roles = $"{Role.SuperAdmin}")]
         public ActionResult<Response<bool>> Delete([FromBody] IdDto idDto)
         {
             try
@@ -83,7 +85,7 @@ namespace AirlineCompanyAPI.Controllers
                 return BadRequest(ex.Message);
             }
         }
-        [HttpPost]
+        [HttpPost, Authorize(Roles = $"{Role.SuperAdmin}")]
         public ActionResult<Response<FlightAttendant>> Get([FromBody] IdDto idDto)
         {
             try
@@ -100,7 +102,7 @@ namespace AirlineCompanyAPI.Controllers
                 return BadRequest(ex.Message);
             }
         }
-        [HttpPost]
+        [HttpPost, Authorize(Roles = $"{Role.SuperAdmin}")]
         public async Task<ActionResult<Response<FlightAttendant>>> Update([FromBody] FlightAttendant flightAttendant)
         {
             try

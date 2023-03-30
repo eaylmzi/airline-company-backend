@@ -49,7 +49,8 @@ namespace AirlineCompanyAPI.Controllers
 
 
         }
-        [HttpPost]
+
+        [HttpPost, Authorize(Roles = $"{Role.SuperAdmin}")]
         public async Task<ActionResult<Response<int>>> Add([FromBody] FlightDto flightDto)
         {
             try
@@ -74,7 +75,7 @@ namespace AirlineCompanyAPI.Controllers
                 return BadRequest(ex.Message);
             }
         }
-        [HttpPost]
+        [HttpPost, Authorize(Roles = $"{Role.SuperAdmin}")]
         public ActionResult<Response<bool>> Delete([FromBody] IdDto idDto)
         {
             try
@@ -97,7 +98,7 @@ namespace AirlineCompanyAPI.Controllers
                 return BadRequest(ex.Message);
             }
         }
-        [HttpPost]
+        [HttpPost, Authorize(Roles = $"{Role.SuperAdmin}")]
         public ActionResult<Response<Flight>> Get([FromBody] IdDto idDto)
         {
             try
@@ -114,7 +115,7 @@ namespace AirlineCompanyAPI.Controllers
                 return BadRequest(ex.Message);
             }
         }
-        [HttpPost]
+        [HttpPost, Authorize(Roles = $"{Role.SuperAdmin}")]
         public async Task<ActionResult<Response<Flight>>> Update([FromBody] Flight updatedEntity)
         {
             try

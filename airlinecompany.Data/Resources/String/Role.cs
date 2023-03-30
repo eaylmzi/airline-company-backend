@@ -12,5 +12,6 @@ namespace airlinecompany.Data.Resources.String
         public const string Pilot = "pilot";
         public const string Hostes = "hostes";
         public const string Admin = "admin";
+        public const string SuperAdmin = "superadmin";
     }
 }

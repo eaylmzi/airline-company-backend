@@ -8,7 +8,9 @@ using airlinecompany.Logic.Logics.Companies;
 using airlinecompany.Logic.Logics.Passengers;
 using airlinecompany.Logic.Logics.Planes;
 using AutoMapper;
+using Microsoft.AspNetCore.Authorization;
 using Microsoft.AspNetCore.Mvc;
+using System.Data;
 
 namespace AirlineCompanyAPI.Controllers
 {
@@ -32,7 +34,7 @@ namespace AirlineCompanyAPI.Controllers
 
 
         }
-        [HttpPost]
+        [HttpPost, Authorize(Roles = $"{Role.SuperAdmin}")]
         public ActionResult<Response<int>> Add([FromBody] CompanyDto companyDto)
         {
             try
@@ -51,7 +53,7 @@ namespace AirlineCompanyAPI.Controllers
                 return BadRequest(ex.Message);
             }
         }
-        [HttpPost]
+        [HttpPost, Authorize(Roles = $"{Role.SuperAdmin}")]
         public ActionResult<Response<bool>> Delete([FromBody] IdDto idDto)
         {
             try
@@ -75,7 +77,7 @@ namespace AirlineCompanyAPI.Controllers
                 return BadRequest(ex.Message);
             }
         }
-        [HttpPost]
+        [HttpPost, Authorize(Roles = $"{Role.SuperAdmin}")]
         public ActionResult<Response<Company>> Get([FromBody] IdDto idDto)
         {
             try
@@ -92,7 +94,7 @@ namespace AirlineCompanyAPI.Controllers
                 return BadRequest(ex.Message);
             }
         }
-        [HttpPost]
+        [HttpPost, Authorize(Roles = $"{Role.SuperAdmin}")]
         public async Task<ActionResult<Response<Company>>> Update([FromBody] IdNameDto updatedEntity)
         {
             try

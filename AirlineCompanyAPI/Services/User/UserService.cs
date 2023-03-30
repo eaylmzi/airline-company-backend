@@ -103,12 +103,6 @@ namespace AirlineCompanyAPI.Services.User
             }
             return CreateSignUpResult(Error.NotAssignedToken, -1, new Passenger());
         }
-        public string CompanyName { get; set; } = null!;
-        public string FlightNumber { get; set; } = null!;
-        public string BeginningName { get; set; } = null!;
-        public string FinalName { get; set; } = null!;
-        public DateTime Date { get; set; }
-   
         public async Task<Response<PurchasedFlight>> BuyTicket(FlightDetails flightDetails, IHeaderDictionary headers)
         {
             PurchasedFlight purchasedFlight = _mapper.Map<PurchasedFlight>(flightDetails);
@@ -145,6 +139,12 @@ namespace AirlineCompanyAPI.Services.User
                 return new Response<PurchasedFlight> { Message = Error.NotReceivedPaymentForPassenger, Data = new PurchasedFlight() };
             }
 
+            Flight? flight = _flightLogic.GetSingle(flightDetails.FlightId);
+            if(flight != null)
+            {
+                flight.PassengerCount = flight.PassengerCount + 1;
+                await _flightLogic.UpdateAsync(flight.Id, flight);
+            }
             return new Response<PurchasedFlight> { Message = Success.SuccesfullyBought, Data = purchasedFlight };
 
 

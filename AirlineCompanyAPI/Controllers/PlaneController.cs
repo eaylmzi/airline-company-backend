@@ -7,6 +7,7 @@ using airlinecompany.Logic.Logics.JoinTables;
 using airlinecompany.Logic.Logics.Passengers;
 using airlinecompany.Logic.Logics.Planes;
 using AutoMapper;
+using Microsoft.AspNetCore.Authorization;
 using Microsoft.AspNetCore.Mvc;
 using MimeKit.Cryptography;
 using System.Data;
@@ -35,7 +36,7 @@ namespace WebApplication1.Controllers
         }
         //  [HttpPost, Authorize(Roles = $"{Roles.Driver},{Roles.Admin},{Roles.SuperAdmin}")]
 
-        [HttpPost]
+        [HttpPost,Authorize(Roles = $"{Role.SuperAdmin}")]
         public ActionResult<Response<int>> Add([FromBody]PlaneDto planeDto)
         {
             try
@@ -53,7 +54,7 @@ namespace WebApplication1.Controllers
                 return BadRequest(ex.Message);
             }
         }
-        [HttpPost]
+        [HttpPost, Authorize(Roles = $"{Role.SuperAdmin}")]
         public ActionResult<Response<bool>> Delete([FromBody] IdDto idDto)
         {
             try
@@ -76,7 +77,7 @@ namespace WebApplication1.Controllers
                 return BadRequest(ex.Message);
             }
         }
-        [HttpPost]
+        [HttpPost, Authorize(Roles = $"{Role.SuperAdmin}")]
         public ActionResult<Response<Plane>> Get([FromBody] IdDto idDto)
         {
             try
@@ -93,7 +94,7 @@ namespace WebApplication1.Controllers
                 return BadRequest(ex.Message);
             }
         }
-        [HttpPost]
+        [HttpPost, Authorize(Roles = $"{Role.SuperAdmin}")]
         public async Task<ActionResult<Response<Plane>>> Update([FromBody] Plane updatedEntity)
         {
             try

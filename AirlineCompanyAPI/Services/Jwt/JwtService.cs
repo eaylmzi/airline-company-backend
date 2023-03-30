@@ -61,6 +61,8 @@ namespace AirlineCompanyAPI.Services.Jwt
 
             return jwt;
         }
+      
+
 
 
         public bool validateToken(string token, IConfiguration _configuration)
