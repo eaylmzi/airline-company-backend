@@ -47,6 +47,7 @@ namespace airlinecompany.Logic.Logics.Flights
             Flight? updateResult = await _flightRepository.UpdateAsync(filter, updatedEntity);
             return updateResult;
         }
+
         public async Task<bool> CheckForeignKey(FlightDto flightDto)
         {
             bool isExist = await _flightRepository.CheckAllForeignKeysExistAsync(flightDto);
@@ -57,5 +58,6 @@ namespace airlinecompany.Logic.Logics.Flights
             bool isBusy = _flightRepository.CheckAvailabality(flightId);
             return isBusy;
         }
+       
     }
 }

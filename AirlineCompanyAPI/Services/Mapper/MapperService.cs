@@ -34,6 +34,7 @@ namespace AirlineCompanyAPI.Services.Mapper
             CreateMap<PointDto, Point>();
 
             CreateMap<FlightDto, Flight>();
+            CreateMap<FlightDetails, PurchasedFlight>();
 
             CreateMap<SessionPassengerDto, SessionPassenger>();
 

@@ -76,6 +76,7 @@ namespace airlinecompany.Data.Models
                 entity.Property(e => e.Price).HasColumnName("price");
 
                 entity.Property(e => e.StartPoint).HasColumnName("start_point");
+                entity.Property(e => e.PassengerCount).HasColumnName("passenger_count");
 
             });
 

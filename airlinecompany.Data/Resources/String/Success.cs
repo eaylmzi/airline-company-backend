@@ -23,6 +23,7 @@ namespace airlinecompany.Data.Resources.String
         public const string SuccesfullyAddedFlightAttendant = "The flight attendant  is successfully added";
         public const string SuccesfullyUpdatedFlightAttendant = "The flight attendant  is successfully updated";
         public const string SuccesfullyReceivedFlightAttendant = "The flight attendant  is successfully received";
+        public const string SuccesfullyFoundFlight = "The flight has found";
 
         public const string SuccesfullyDeletedCompany = "The company is successfully deleted";
         public const string SuccesfullyAddedCompany = "The company  is successfully added";
@@ -43,6 +44,8 @@ namespace airlinecompany.Data.Resources.String
         public const string SuccesfullyAddedSessionPassenger = "The session passenger  is successfully added";
         public const string SuccesfullyUpdatedSessionPassenger = "The session passenger  is successfully updated";
         public const string SuccesfullyReceivedSessionPassenger  = "The session passenger  is successfully received";
+
+        public const string SuccesfullyBought = "The passenger received successfully flight";
 
 
 

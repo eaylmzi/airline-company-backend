@@ -96,7 +96,7 @@ namespace AirlineCompanyAPI.Controllers
         {
             try
             {
-                if (_userService.Verify(Request.Headers, _jwtService.GetUserRoleFromToken(Request.Headers)))
+                if (_userService.Verify(Request.Headers))
                 {
                     bool isDeleted = _passengerLogic.Delete(idDto.Id);
                     if (isDeleted)
@@ -139,7 +139,7 @@ namespace AirlineCompanyAPI.Controllers
         {
             try
             {
-                if (_userService.Verify(Request.Headers, _jwtService.GetUserRoleFromToken(Request.Headers))) 
+                if (_userService.Verify(Request.Headers)) 
                 {
                     Passenger? isPassengerFound = _passengerLogic.GetSingle(_jwtService.GetUserIdFromToken(Request.Headers));
                     if (isPassengerFound != null)

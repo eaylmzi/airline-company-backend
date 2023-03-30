@@ -1,4 +1,5 @@
-﻿using System;
+﻿using airlinecompany.Data.Models;
+using System;
 using System.Collections.Generic;
 using System.Linq;
 using System.Text;
@@ -56,6 +57,16 @@ namespace airlinecompany.Data.Resources.String
         public const string NotAssignedToken = "The token is not assigned to passenger";
         public const string NotAddedPassenger = "The passenger is not added";
         public const string NotMatchedUser = "The credentials of user is not matched";
+
+        public const string NotPaidPayment = "Passenger could not pay the airfare";
+        public const string NotReceivedPaymentForCompany = "The passenger fee could not be collected by the company.Fee refunded";
+        public const string NotReceivedPaymentForPassenger = "The passenger fee could not be collected by the company.Fee not refunded. Please contact the company";
+        public const string NotRegisteredToFlight = "The passenger did not register to flight. Money returned";
+        public const string NotEnoughMoney = "Insufficient balance";
+      
+
+
+
 
     }
 }

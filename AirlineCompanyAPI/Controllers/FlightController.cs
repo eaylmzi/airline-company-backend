@@ -10,6 +10,14 @@ using AutoMapper;
 using Microsoft.AspNetCore.Mvc;
 using airlinecompany.Logic.Logics.Flights;
 using airlinecompany.Data.Models.dto.Flights.dto;
+using airlinecompany.Data.Models.dto.Point.dto;
+using airlinecompany.Logic.Logics.JoinTables;
+using AirlineCompanyAPI.Services.User;
+using System.ComponentModel.Design;
+using airlinecompany.Data.Models.dto.Passengers.dto;
+using AirlineCompanyAPI.Services.Jwt;
+using Microsoft.AspNetCore.Authorization;
+using System.Data;
 
 namespace AirlineCompanyAPI.Controllers
 {
@@ -22,16 +30,22 @@ namespace AirlineCompanyAPI.Controllers
         private readonly IPlaneLogic _planeLogic;
         private readonly ICompanyLogic _companyLogic;
         private readonly IFlightLogic _flightLogic;
+        private readonly IJoinTableLogic _joinTableLogic;
+        private readonly IUserService _userService;
+        private readonly IJwtService _jwtService;
 
 
         public FlightController(IMapper mapper, IPassengerLogic passengerLogic, IPlaneLogic planeLogic, ICompanyLogic companyLogic,
-            IFlightLogic flightLogic)
+            IFlightLogic flightLogic, IJoinTableLogic joinTableLogic, IUserService userService, IJwtService jwtService)
         {
             _mapper = mapper;
             _passengerLogic = passengerLogic;
             _planeLogic = planeLogic;
             _companyLogic = companyLogic;
             _flightLogic = flightLogic;
+            _joinTableLogic = joinTableLogic;
+            _userService = userService;
+            _jwtService = jwtService;
 
 
         }
@@ -44,6 +58,7 @@ namespace AirlineCompanyAPI.Controllers
                 if(isExist)
                 {
                     Flight flight = _mapper.Map<Flight>(flightDto);
+                    flight.PassengerCount = 0;
                     int flightId = _flightLogic.Add(flight);
                     if (flightId != -1)
                     {
@@ -116,5 +131,45 @@ namespace AirlineCompanyAPI.Controllers
                 return BadRequest(ex.Message);
             }
         }
+        [HttpPost]
+        public ActionResult<Response<FlightDetails>> FindFlight([FromBody] Journey journey)
+        {
+            try
+            {
+                var list = _joinTableLogic.FindFlightsByDestinationJoinTables(journey.From, journey.To, journey.Date);
+                if (list != null)
+                {
+                    return Ok(list);
+                }
+                return Ok(new Response<FlightDetails> { Message = Error.NotFoundFlight, Data = new FlightDetails() });
+            }
+            catch (Exception ex)
+            {
+                return BadRequest(ex.Message);
+            }
+        }
+        [HttpPost, Authorize(Roles = $"{Role.Passenger}")]
+        public async Task<ActionResult<Response<PurchasedFlight>>> BuyTicket([FromBody] FlightDetails flightDetails)
+        {
+            try
+            {
+                if(_userService.Verify(Request.Headers))
+                {
+                    Response<PurchasedFlight> isBought = await _userService.BuyTicket(flightDetails, Request.Headers);
+                    return isBought;
+
+                }
+                return Unauthorized(Error.NotMatchedUser);
+               
+
+
+
+            }
+            catch (Exception ex)
+            {
+                return BadRequest(ex.Message);
+            }
+        }
+        
     }
 }

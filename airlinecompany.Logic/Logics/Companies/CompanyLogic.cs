@@ -51,5 +51,6 @@ namespace airlinecompany.Logic.Logics.Companies
             bool isBusy = _companyRepository.CheckAvailabality(companyId);
             return isBusy;
         }
+
     }
 }

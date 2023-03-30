@@ -105,6 +105,13 @@ namespace AirlineCompanyAPI.Services.Jwt
             string role = jwt.Claims.First(c => c.Type == "role").Value;
             return role;
         }
+        public string GetUserNameFromToken(IHeaderDictionary headers)
+        {
+            string requestToken = headers[HeaderNames.Authorization].ToString().Replace("bearer ", "");
+            var jwt = new JwtSecurityTokenHandler().ReadJwtToken(requestToken);
+            string role = jwt.Claims.First(c => c.Type == "username").Value;
+            return role;
+        }
         public string GetUserTokenFromToken(IHeaderDictionary headers)
         {
             string requestToken = headers[HeaderNames.Authorization].ToString().Replace("bearer ", "");

@@ -14,5 +14,6 @@ namespace airlinecompany.Data.Models
         public int FinalPoint { get; set; }
         public DateTime Date { get; set; }
         public int FlightAttendantId { get; set; }
+        public int PassengerCount { get; set; }
     }
 }
