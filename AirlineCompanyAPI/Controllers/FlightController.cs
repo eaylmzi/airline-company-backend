@@ -133,15 +133,22 @@ namespace AirlineCompanyAPI.Controllers
                 return BadRequest(ex.Message);
             }
         }
-        [HttpPost]
-        public ActionResult<Response<FlightDetails>> FindFlight([FromBody] Journey journey)
+        [HttpPost("{page}")]
+        public ActionResult<Response<FlightDetails>> FindFlight([FromBody] Journey journey, int page)
         {
             try
             {
                 var list = _joinTableLogic.FindFlightsByDestinationJoinTables(journey.From, journey.To, journey.Date);
                 if (list != null)
                 {
-                    return Ok(list);
+                    var pageResults = 1f;
+                    var pageCount = Math.Ceiling(list.Count() / pageResults);
+                    var products = list
+                        .Skip((page - 1) * (int)pageResults)
+                        .Take((int)pageResults)
+                        .ToList();
+
+                    return Ok(products);
                 }
                 return Ok(new Response<FlightDetails> { Message = Error.NotFoundFlight, Data = new FlightDetails() });
             }

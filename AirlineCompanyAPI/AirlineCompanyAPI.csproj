@@ -34,4 +34,8 @@
 	<ItemGroup>
 		<ProjectReference Include="..\airlinecompany.Logic\airlinecompany.Logic.csproj" />
 	</ItemGroup>
+	
+	<ItemGroup>
+	  <Folder Include="Services\Paging\" />
+	</ItemGroup>
 </Project>
