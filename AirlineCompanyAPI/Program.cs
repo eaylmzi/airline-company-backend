@@ -18,9 +18,13 @@ using AirlineCompanyAPI.Services.Cipher;
 using AirlineCompanyAPI.Services.Jwt;
 using AirlineCompanyAPI.Services.User;
 using Microsoft.AspNetCore.Authentication.JwtBearer;
+using Microsoft.AspNetCore.Mvc;
+using Microsoft.AspNetCore.Mvc.Versioning;
+using Microsoft.Extensions.Options;
 using Microsoft.IdentityModel.Tokens;
 using Microsoft.OpenApi.Models;
 using Swashbuckle.AspNetCore.Filters;
+using Swashbuckle.AspNetCore.SwaggerGen;
 using System.Text;
 
 var builder = WebApplication.CreateBuilder(args);
@@ -55,6 +59,16 @@ builder.Services.AddScoped<ISessionPassengerRepository, SessionPassengerReposito
 
 builder.Services.AddAutoMapper(typeof(Program).Assembly);
 
+builder.Services.AddApiVersioning(opt =>
+{
+    opt.DefaultApiVersion = new Microsoft.AspNetCore.Mvc.ApiVersion(1, 0);
+    opt.AssumeDefaultVersionWhenUnspecified = true;
+    opt.ReportApiVersions = true;
+    opt.ApiVersionReader = ApiVersionReader.Combine(new UrlSegmentApiVersionReader(),
+                                                    new HeaderApiVersionReader("x-api-version"),
+                                                    new MediaTypeApiVersionReader("x-api-version"));
+});
+
 builder.Services.AddControllers();
 // Learn more about configuring Swagger/OpenAPI at https://aka.ms/aspnetcore/swashbuckle
 builder.Services.AddEndpointsApiExplorer();
@@ -84,7 +98,7 @@ builder.Services.AddAuthentication(JwtBearerDefaults.AuthenticationScheme)
     });
 
 var app = builder.Build();
-
+app.UseApiVersioning();
 // Configure the HTTP request pipeline.
 if (app.Environment.IsDevelopment())
 {

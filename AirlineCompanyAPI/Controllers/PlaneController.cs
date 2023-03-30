@@ -15,8 +15,9 @@ using System.Data;
 
 namespace WebApplication1.Controllers
 {
-    [Route("api/[controller]/[action]")]
+    [Route("api/v{version:apiVersion}/[controller]/[action]")]
     [ApiController]
+    [ApiVersion("1")]
     public class PlaneController : ControllerBase
     {
 

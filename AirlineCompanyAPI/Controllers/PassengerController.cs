@@ -19,8 +19,9 @@ using airlinecompany.Data.Models.dto;
 
 namespace AirlineCompanyAPI.Controllers
 {
-    [Route("api/[controller]/[action]")]
+    [Route("api/v{version:apiVersion}/[controller]/[action]")]
     [ApiController]
+    [ApiVersion("1")]
     public class PassengerController : Controller
     {
         private readonly IMapper _mapper;
