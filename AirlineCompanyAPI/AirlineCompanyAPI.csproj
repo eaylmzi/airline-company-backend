@@ -4,6 +4,7 @@
     <TargetFramework>net6.0</TargetFramework>
     <Nullable>enable</Nullable>
     <ImplicitUsings>enable</ImplicitUsings>
+    <UserSecretsId>e212a55c-2361-40da-ad31-70946f0e3688</UserSecretsId>
   </PropertyGroup>
 
   <ItemGroup>
@@ -36,6 +37,7 @@
 	</ItemGroup>
 	
 	<ItemGroup>
+	  <Folder Include="Properties\PublishProfiles\" />
 	  <Folder Include="Services\Paging\" />
 	</ItemGroup>
 </Project>

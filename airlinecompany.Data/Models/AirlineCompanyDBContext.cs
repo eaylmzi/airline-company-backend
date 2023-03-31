@@ -28,7 +28,7 @@ namespace airlinecompany.Data.Models
         {
             if (!optionsBuilder.IsConfigured)
             {
-                optionsBuilder.UseSqlServer("Server=.\\SQLSERVER;Database=AirlineCompanyDB;Trusted_Connection=true;");
+                optionsBuilder.UseSqlServer("Data Source=airlinecompany-ey.database.windows.net;Initial Catalog=AirlineCompanyDB;User ID=AirlineCompanyEY;Password=Airline123456");
 
             }
         }
