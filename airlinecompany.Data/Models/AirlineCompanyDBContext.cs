@@ -16,14 +16,6 @@ namespace airlinecompany.Data.Models
         {
         }
 
-        public virtual DbSet<Company> Companies { get; set; } = null!;
-        public virtual DbSet<Flight> Flights { get; set; } = null!;
-        public virtual DbSet<FlightAttendant> FlightAttendants { get; set; } = null!;
-        public virtual DbSet<Passenger> Passengers { get; set; } = null!;
-        public virtual DbSet<Plane> Planes { get; set; } = null!;
-        public virtual DbSet<Point> Points { get; set; } = null!;
-        public virtual DbSet<SessionPassenger> SessionPassengers { get; set; } = null!;
-
         protected override void OnConfiguring(DbContextOptionsBuilder optionsBuilder)
         {
             if (!optionsBuilder.IsConfigured)
