@@ -82,10 +82,10 @@ namespace AirlineCompanyAPI.Controllers
                     if (isLogin)
                     {
                         PassengerSignInDto passengerSignInDto = _mapper.Map<PassengerSignInDto>(passenger);
-                        return Ok(new Response<PassengerSignInDto> { Message = Success.SuccesfullySignIn, Data = passengerSignInDto });
+                        return Ok(new Response<PassengerSignInDto> { Message = Success.SuccesfullySignIn, Data = passengerSignInDto, Progress = true });
                     }                 
                 }
-                return BadRequest(new Response<PassengerSignInDto> { Message = Error.NotFoundPassengerCredential, Data = new PassengerSignInDto() });
+                return BadRequest(new Response<PassengerSignInDto> { Message = Error.NotFoundPassengerCredential, Data = new PassengerSignInDto(), Progress = false });
             }
             catch (Exception ex)
             {
@@ -102,11 +102,11 @@ namespace AirlineCompanyAPI.Controllers
                     bool isDeleted = _passengerLogic.Delete(idDto.Id);
                     if (isDeleted)
                     {
-                        return Ok(new Response<bool> { Message = Success.SuccesfullyDeletedPassenger, Data = isDeleted });
+                        return Ok(new Response<bool> { Message = Success.SuccesfullyDeletedPassenger, Data = isDeleted, Progress = true });
                     }
-                    return Ok(new Response<bool> { Message = Error.NotDeletedPassenger, Data = isDeleted });
+                    return Ok(new Response<bool> { Message = Error.NotDeletedPassenger, Data = isDeleted, Progress = false });
                 }
-                return BadRequest(Error.NotMatchedUser);
+                return BadRequest(new Response<bool> { Message = Error.NotMatchedUser, Data = false, Progress = false });
             }
 
             catch (Exception ex)
@@ -126,9 +126,9 @@ namespace AirlineCompanyAPI.Controllers
                 Passenger? passenger = _passengerLogic.GetSingle(idDto.Id);
                 if (passenger != null)
                 {
-                    return Ok(new Response<Passenger> { Message = Success.SuccesfullyAddedPassenger, Data = passenger });
+                    return Ok(new Response<Passenger> { Message = Success.SuccesfullyAddedPassenger, Data = passenger, Progress = true });
                 }
-                return Ok(new Response<Passenger> { Message = Success.SuccesfullyAddedPassenger, Data = new Passenger()});
+                return Ok(new Response<Passenger> { Message = Success.SuccesfullyAddedPassenger, Data = new Passenger(), Progress = false });
             }
             catch (Exception ex)
             {
@@ -148,7 +148,7 @@ namespace AirlineCompanyAPI.Controllers
                         Passenger? isUserNameUnique = _passengerLogic.GetSingleByUsername(passengerDto.UserName);
                         if (isUserNameUnique != null)
                         {
-                            return BadRequest(new Response<PassengerDto> { Message = Error.AlreadyAddedUsername, Data = new PassengerDto() });
+                            return BadRequest(new Response<PassengerDto> { Message = Error.AlreadyAddedUsername, Data = new PassengerDto(), Progress = false });
                         }
 
                         Passenger newPassenger = _mapper.Map<Passenger>(passengerDto);
@@ -160,15 +160,15 @@ namespace AirlineCompanyAPI.Controllers
                         if (updatedPassenger != null)
                         {
                             PassengerDto updatedPassengerDto = _mapper.Map<PassengerDto>(updatedPassenger);
-                            return Ok(new Response<PassengerDto> { Message = Success.SuccesfullyUpdatedPassenger, Data = updatedPassengerDto });
+                            return Ok(new Response<PassengerDto> { Message = Success.SuccesfullyUpdatedPassenger, Data = updatedPassengerDto, Progress = true });
                         }
 
-                        return Ok(new Response<PassengerDto> { Message = Error.NotUpdatedPassenger, Data = new PassengerDto() });
+                        return Ok(new Response<PassengerDto> { Message = Error.NotUpdatedPassenger, Data = new PassengerDto(), Progress = false });
                     }
-                    return Ok(new Response<PassengerDto> { Message = Error.NotFoundPassenger, Data = new PassengerDto() });
+                    return Ok(new Response<PassengerDto> { Message = Error.NotFoundPassenger, Data = new PassengerDto(), Progress = false });
 
                 }
-                return BadRequest(Error.NotMatchedUser);
+                return BadRequest(new Response<PassengerDto> { Message = Error.NotMatchedUser, Data = new PassengerDto(), Progress = false });
                 
 
             }

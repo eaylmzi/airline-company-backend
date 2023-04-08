@@ -46,9 +46,9 @@ namespace WebApplication1.Controllers
                 int planeId = _planeLogic.Add(plane);
                 if(planeId != -1)
                 {
-                    return Ok(new Response<int> { Message = Success.SuccesfullyAddedPlane, Data = planeId });
+                    return Ok(new Response<int> { Message = Success.SuccesfullyAddedPlane, Data = planeId, Progress = true });
                 }
-                return Ok(new Response<int> { Message = Error.NotAddedPlane , Data = planeId});              
+                return Ok(new Response<int> { Message = Error.NotAddedPlane , Data = planeId, Progress = false });              
             }
             catch (Exception ex)
             {
@@ -66,11 +66,11 @@ namespace WebApplication1.Controllers
                     bool isDeleted = _planeLogic.Delete(idDto.Id);
                     if (isDeleted)
                     {
-                        return Ok(new Response<bool> { Message = Success.SuccesfullyDeletedPlane, Data = isDeleted });
+                        return Ok(new Response<bool> { Message = Success.SuccesfullyDeletedPlane, Data = isDeleted, Progress = true });
                     }
-                    return Ok(new Response<bool> { Message = Error.NotDeletedPlane, Data = isDeleted });
+                    return Ok(new Response<bool> { Message = Error.NotDeletedPlane, Data = isDeleted, Progress = false });
                 }
-                return Ok(new Response<bool> { Message = Error.NotAvailablePlane, Data = !isBusy });
+                return Ok(new Response<bool> { Message = Error.NotAvailablePlane, Data = !isBusy, Progress = false });
 
             }
             catch (Exception ex)
@@ -86,9 +86,9 @@ namespace WebApplication1.Controllers
                 Plane? plane = _planeLogic.GetSingle(idDto.Id);
                 if(plane != null)
                 {
-                    return Ok(new Response<Plane> { Message = Success.SuccesfullyReceivedPlane, Data = plane });
+                    return Ok(new Response<Plane> { Message = Success.SuccesfullyReceivedPlane, Data = plane, Progress = true });
                 }
-                return Ok(new Response<Plane> { Message = Error.NotAddedPlane, Data = new Plane() });
+                return Ok(new Response<Plane> { Message = Error.NotAddedPlane, Data = new Plane(), Progress = false });
             }
             catch (Exception ex)
             {
@@ -103,9 +103,9 @@ namespace WebApplication1.Controllers
                 Plane? updatedPlane = await _planeLogic.UpdateAsync(updatedEntity.Id, updatedEntity);
                 if (updatedPlane != null)
                 {
-                    return Ok(new Response<Plane> { Message = Success.SuccesfullyUpdatedPlane, Data = updatedPlane });
+                    return Ok(new Response<Plane> { Message = Success.SuccesfullyUpdatedPlane, Data = updatedPlane, Progress = true });
                 }
-                return Ok(new Response<Plane> { Message = Error.NotUpdatedPlane, Data = new Plane() });
+                return Ok(new Response<Plane> { Message = Error.NotUpdatedPlane, Data = new Plane(), Progress = false });
             }
             catch (Exception ex)
             {

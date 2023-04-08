@@ -64,11 +64,11 @@ namespace AirlineCompanyAPI.Controllers
                     int flightId = _flightLogic.Add(flight);
                     if (flightId != -1)
                     {
-                        return Ok(new Response<int> { Message = Success.SuccesfullyAddedFlight, Data = flightId });
+                        return Ok(new Response<int> { Message = Success.SuccesfullyAddedFlight, Data = flightId, Progress = true });
                     }
-                    return Ok(new Response<int> { Message = Error.NotAddedFlight, Data = flightId });
+                    return Ok(new Response<int> { Message = Error.NotAddedFlight, Data = flightId, Progress = false });
                 }
-                return BadRequest(new Response<int> { Message = Error.ForeignKeyConstraints, Data = -1 });
+                return BadRequest(new Response<int> { Message = Error.ForeignKeyConstraints, Data = -1, Progress = false });
                 
             }
             catch (Exception ex)
@@ -87,11 +87,11 @@ namespace AirlineCompanyAPI.Controllers
                     bool isDeleted = _flightLogic.Delete(idDto.Id);
                     if (isDeleted)
                     {
-                        return Ok(new Response<bool> { Message = Success.SuccesfullyDeletedFlight, Data = isDeleted });
+                        return Ok(new Response<bool> { Message = Success.SuccesfullyDeletedFlight, Data = isDeleted, Progress = true });
                     }
-                    return Ok(new Response<bool> { Message = Error.NotDeletedFlight, Data = isDeleted });
+                    return Ok(new Response<bool> { Message = Error.NotDeletedFlight, Data = isDeleted, Progress = false });
                 }
-                return Ok(new Response<bool> { Message = Error.NotAvailableFlight, Data = !isBusy });
+                return Ok(new Response<bool> { Message = Error.NotAvailableFlight, Data = !isBusy, Progress = false });
 
             }
             catch (Exception ex)
@@ -107,9 +107,9 @@ namespace AirlineCompanyAPI.Controllers
                 Flight? flight = _flightLogic.GetSingle(idDto.Id);
                 if (flight != null)
                 {
-                    return Ok(new Response<Flight> { Message = Success.SuccesfullyAddedFlight, Data = flight });
+                    return Ok(new Response<Flight> { Message = Success.SuccesfullyAddedFlight, Data = flight, Progress = true });
                 }
-                return Ok(new Response<Flight> { Message = Error.NotFoundFlight, Data = new Flight() });
+                return Ok(new Response<Flight> { Message = Error.NotFoundFlight, Data = new Flight(), Progress = false });
             }
             catch (Exception ex)
             {
@@ -124,9 +124,9 @@ namespace AirlineCompanyAPI.Controllers
                 Flight? updatedFlight = await _flightLogic.UpdateAsync(updatedEntity.Id, updatedEntity);
                 if (updatedFlight != null)
                 {
-                    return Ok(new Response<Flight> { Message = Success.SuccesfullyUpdatedFlight, Data = updatedFlight });
+                    return Ok(new Response<Flight> { Message = Success.SuccesfullyUpdatedFlight, Data = updatedFlight, Progress = true });
                 }
-                return Ok(new Response<Flight> { Message = Error.NotUpdatedFlight, Data = new Flight() });
+                return Ok(new Response<Flight> { Message = Error.NotUpdatedFlight, Data = new Flight(), Progress = false });
             }
             catch (Exception ex)
             {
@@ -150,7 +150,7 @@ namespace AirlineCompanyAPI.Controllers
 
                     return Ok(products);
                 }
-                return Ok(new Response<FlightDetails> { Message = Error.NotFoundFlight, Data = new FlightDetails() });
+                return Ok(new Response<FlightDetails> { Message = Error.NotFoundFlight, Data = new FlightDetails(), Progress = false });
             }
             catch (Exception ex)
             {
@@ -168,7 +168,7 @@ namespace AirlineCompanyAPI.Controllers
                     return isBought;
 
                 }
-                return Unauthorized(Error.NotMatchedUser);
+                return Unauthorized(new Response<FlightDetails> { Message = Error.NotMatchedUser, Data = new FlightDetails(), Progress = false });
                
 
 

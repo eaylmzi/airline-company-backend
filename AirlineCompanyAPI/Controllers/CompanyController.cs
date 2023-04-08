@@ -45,9 +45,9 @@ namespace AirlineCompanyAPI.Controllers
                 int companyId = _companyLogic.Add(company);
                 if(companyId != -1)
                 {
-                    return Ok(new Response<int> { Message = Success.SuccesfullyAddedCompany, Data = companyId });
+                    return Ok(new Response<int> { Message = Success.SuccesfullyAddedCompany, Data = companyId , Progress = true});
                 }
-                return Ok(new Response<int> { Message = Error.NotAddedCompany, Data = companyId });
+                return Ok(new Response<int> { Message = Error.NotAddedCompany, Data = companyId, Progress = false});
             }
             catch (Exception ex)
             {
@@ -65,11 +65,11 @@ namespace AirlineCompanyAPI.Controllers
                     bool isDeleted = _companyLogic.Delete(idDto.Id);
                     if (isDeleted)
                     {
-                        return Ok(new Response<bool> { Message = Success.SuccesfullyDeletedCompany, Data = isDeleted });
+                        return Ok(new Response<bool> { Message = Success.SuccesfullyDeletedCompany, Data = isDeleted ,Progress = true});
                     }
-                    return Ok(new Response<bool> { Message = Error.NotDeletedCompany, Data = isDeleted });
+                    return Ok(new Response<bool> { Message = Error.NotDeletedCompany, Data = isDeleted , Progress = false});
                 }
-                return Ok(new Response<bool> { Message = Error.NotAvailableCompany, Data = !isBusy });
+                return Ok(new Response<bool> { Message = Error.NotAvailableCompany, Data = !isBusy, Progress = false });
 
 
             }
@@ -86,9 +86,9 @@ namespace AirlineCompanyAPI.Controllers
                 Company? company = _companyLogic.GetSingle(idDto.Id);
                 if (company != null)
                 {
-                    return Ok(new Response<Company> { Message = Success.SuccesfullyAddedCompany, Data = company});
+                    return Ok(new Response<Company> { Message = Success.SuccesfullyAddedCompany, Data = company, Progress = true });
                 }
-                return Ok(new Response<Company> { Message = Error.NotFoundCompany, Data = new Company() });
+                return Ok(new Response<Company> { Message = Error.NotFoundCompany, Data = new Company(), Progress = false });
             }
             catch (Exception ex)
             {
@@ -107,12 +107,12 @@ namespace AirlineCompanyAPI.Controllers
                     Company? updatedCompany = await _companyLogic.UpdateAsync(updatedEntity.Id, newCompany);
                     if (updatedCompany != null)
                     {
-                        return Ok(new Response<Company> { Message = Success.SuccesfullyUpdatedCompany, Data = updatedCompany });
+                        return Ok(new Response<Company> { Message = Success.SuccesfullyUpdatedCompany, Data = updatedCompany, Progress = true });
                     }
-                    return Ok(new Response<Company> { Message = Error.NotUpdatedCompany, Data = new Company() });
+                    return Ok(new Response<Company> { Message = Error.NotUpdatedCompany, Data = new Company(), Progress = false });
                 }
                 
-                return Ok(new Response<Company> { Message = Error.NotUpdatedCompany, Data = new Company() });
+                return Ok(new Response<Company> { Message = Error.NotUpdatedCompany, Data = new Company(), Progress = false });
             }
             catch (Exception ex)
             {

@@ -44,15 +44,16 @@ namespace AirlineCompanyAPI.Controllers
                 Point? isAlreadyAdded = _pointLogic.GetSingleByName(pointDto.Name);
                 if (isAlreadyAdded != null)
                 {
-                    return Ok(new Response<int> { Message = Warning.AlreadyAddedPoint, Data = isAlreadyAdded.Id });
+                    return Ok(new Response<int> { Message = Warning.AlreadyAddedPoint, Data = isAlreadyAdded.Id, Progress = true });
                 }
+
                 Point point = _mapper.Map<Point>(pointDto);
                 int pointId = _pointLogic.Add(point);
                 if (pointId != -1)
                 {
-                    return Ok(new Response<int> { Message = Success.SuccesfullyAddedPoint, Data = pointId });
+                    return Ok(new Response<int> { Message = Success.SuccesfullyAddedPoint, Data = pointId, Progress = true });
                 }
-                return Ok(new Response<int> { Message = Error.NotAddedPoint, Data = pointId });
+                return Ok(new Response<int> { Message = Error.NotAddedPoint, Data = pointId, Progress = false });
             }
             catch (Exception ex)
             {
@@ -70,11 +71,11 @@ namespace AirlineCompanyAPI.Controllers
                     bool isDeleted = _pointLogic.Delete(idDto.Id);
                     if (isDeleted)
                     {
-                        return Ok(new Response<bool> { Message = Success.SuccesfullyDeletedPoint, Data = isDeleted });
+                        return Ok(new Response<bool> { Message = Success.SuccesfullyDeletedPoint, Data = isDeleted, Progress = true });
                     }
-                    return Ok(new Response<bool> { Message = Error.NotDeletedPoint, Data = isDeleted });
+                    return Ok(new Response<bool> { Message = Error.NotDeletedPoint, Data = isDeleted, Progress = false });
                 }
-                return Ok(new Response<bool> { Message = Error.NotAvailablePoint, Data = !isBusy });
+                return Ok(new Response<bool> { Message = Error.NotAvailablePoint, Data = !isBusy, Progress = false });
 
             }
             catch (Exception ex)
@@ -90,9 +91,9 @@ namespace AirlineCompanyAPI.Controllers
                 Point? point = _pointLogic.GetSingle(idDto.Id);
                 if (point != null)
                 {
-                    return Ok(new Response<Point> { Message = Success.SuccesfullyReceivedPoint, Data = point });
+                    return Ok(new Response<Point> { Message = Success.SuccesfullyReceivedPoint, Data = point, Progress = true });
                 }
-                return Ok(new Response<Point> { Message = Error.NotAddedPoint, Data = new Point() });
+                return Ok(new Response<Point> { Message = Error.NotAddedPoint, Data = new Point(), Progress = false });
             }
             catch (Exception ex)
             {
@@ -107,9 +108,9 @@ namespace AirlineCompanyAPI.Controllers
                 Point? updatedPoint = await _pointLogic.UpdateAsync(updatedEntity.Id, updatedEntity);
                 if (updatedPoint != null)
                 {
-                    return Ok(new Response<Point> { Message = Success.SuccesfullyUpdatedPoint, Data = updatedPoint });
+                    return Ok(new Response<Point> { Message = Success.SuccesfullyUpdatedPoint, Data = updatedPoint, Progress = true });
                 }
-                return Ok(new Response<Point> { Message = Error.NotUpdatedPoint, Data = new Point() });
+                return Ok(new Response<Point> { Message = Error.NotUpdatedPoint, Data = new Point(), Progress = false });
             }
             catch (Exception ex)
             {

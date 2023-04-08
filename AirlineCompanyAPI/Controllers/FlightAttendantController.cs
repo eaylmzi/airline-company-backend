@@ -51,9 +51,9 @@ namespace AirlineCompanyAPI.Controllers
                     int flightAttendantId = _flightAttendantLogic.Add(flightAttendant);
                     if(flightAttendantId != -1)
                     {
-                        return Ok(new Response<int> { Message = Success.SuccesfullyAddedFlightAttendant, Data = flightAttendantId });
+                        return Ok(new Response<int> { Message = Success.SuccesfullyAddedFlightAttendant, Data = flightAttendantId, Progress = true });
                     }
-                    return Ok(new Response<int> { Message = Error.NotAddedFlightAttendant, Data = flightAttendantId });
+                    return Ok(new Response<int> { Message = Error.NotAddedFlightAttendant, Data = flightAttendantId, Progress = false });
 
                 }
                 return BadRequest(Error.NotFoundCompany);
@@ -74,11 +74,11 @@ namespace AirlineCompanyAPI.Controllers
                     bool isDeleted = _flightAttendantLogic.Delete(idDto.Id);
                     if (isDeleted)
                     {
-                        return Ok(new Response<bool> { Message = Success.SuccesfullyDeletedFlightAttendant, Data = isDeleted });
+                        return Ok(new Response<bool> { Message = Success.SuccesfullyDeletedFlightAttendant, Data = isDeleted, Progress = true });
                     }
-                    return Ok(new Response<bool> { Message = Error.NotDeletedFlightAttendant, Data = isDeleted });
+                    return Ok(new Response<bool> { Message = Error.NotDeletedFlightAttendant, Data = isDeleted, Progress = false });
                 }
-               return Ok(new Response<bool> { Message = Error.NotAvailableFlightAttendant, Data = !isBusy });
+               return Ok(new Response<bool> { Message = Error.NotAvailableFlightAttendant, Data = !isBusy, Progress = false });
 
             }
             catch (Exception ex)
@@ -94,9 +94,9 @@ namespace AirlineCompanyAPI.Controllers
                 FlightAttendant? flightAttendant = _flightAttendantLogic.GetSingle(idDto.Id);
                 if (flightAttendant != null)
                 {
-                    return Ok(new Response<FlightAttendant> { Message = Success.SuccesfullyReceivedFlightAttendant, Data = flightAttendant });
+                    return Ok(new Response<FlightAttendant> { Message = Success.SuccesfullyReceivedFlightAttendant, Data = flightAttendant, Progress = true });
                 }
-                return Ok(new Response<FlightAttendant> { Message = Error.NotDeletedFlightAttendant, Data = new FlightAttendant() });
+                return Ok(new Response<FlightAttendant> { Message = Error.NotDeletedFlightAttendant, Data = new FlightAttendant(), Progress = false });
             }
             catch (Exception ex)
             {
@@ -114,12 +114,12 @@ namespace AirlineCompanyAPI.Controllers
                     FlightAttendant? updatedFlightAttendant = await _flightAttendantLogic.UpdateAsync(flightAttendant.Id, flightAttendant);
                     if (updatedFlightAttendant != null)
                     {
-                        return Ok(new Response<FlightAttendant> { Message = Success.SuccesfullyUpdatedFlightAttendant, Data = updatedFlightAttendant });
+                        return Ok(new Response<FlightAttendant> { Message = Success.SuccesfullyUpdatedFlightAttendant, Data = updatedFlightAttendant, Progress = true });
                     }
 
-                    return Ok(new Response<FlightAttendant> { Message = Error.NotUpdatedFlightAttendant, Data = new FlightAttendant() });
+                    return Ok(new Response<FlightAttendant> { Message = Error.NotUpdatedFlightAttendant, Data = new FlightAttendant(), Progress = false });
                 }
-                return Ok(new Response<FlightAttendant> { Message = Error.NotFoundCompany, Data = new FlightAttendant() });
+                return Ok(new Response<FlightAttendant> { Message = Error.NotFoundCompany, Data = new FlightAttendant(), Progress = false });
 
             }
             catch (Exception ex)

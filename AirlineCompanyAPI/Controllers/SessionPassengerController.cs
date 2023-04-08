@@ -45,9 +45,9 @@ namespace AirlineCompanyAPI.Controllers
                 int sessionPassengerId = _sessionPassengerLogic.Add(sessionPassenger);
                 if (sessionPassengerId != -1)
                 {
-                    return Ok(new Response<int> { Message = Success.SuccesfullyAddedSessionPassenger, Data = sessionPassengerId });
+                    return Ok(new Response<int> { Message = Success.SuccesfullyAddedSessionPassenger, Data = sessionPassengerId, Progress = true });
                 }
-                return Ok(new Response<int> { Message = Error.NotAddedSessionPassenger, Data = sessionPassengerId });
+                return Ok(new Response<int> { Message = Error.NotAddedSessionPassenger, Data = sessionPassengerId, Progress = false });
             }
             catch (Exception ex)
             {
@@ -62,9 +62,9 @@ namespace AirlineCompanyAPI.Controllers
                 bool isDeleted = _sessionPassengerLogic.Delete(idDto.Id);
                 if (isDeleted)
                 {
-                    return Ok(new Response<bool> { Message = Success.SuccesfullyDeletedSessionPassenger, Data = isDeleted });
+                    return Ok(new Response<bool> { Message = Success.SuccesfullyDeletedSessionPassenger, Data = isDeleted, Progress = true });
                 }
-                return Ok(new Response<bool> { Message = Error.NotDeletedSessionPassenger, Data = isDeleted });
+                return Ok(new Response<bool> { Message = Error.NotDeletedSessionPassenger, Data = isDeleted, Progress = false });
             }
             catch (Exception ex)
             {
@@ -79,9 +79,9 @@ namespace AirlineCompanyAPI.Controllers
                 var sessionPassengerList = _sessionPassengerLogic.GetByPassengerId(idDto.Id);
                 if (sessionPassengerList != null)
                 {
-                    return Ok(new Response<List<SessionPassenger>> { Message = Success.SuccesfullyReceivedSessionPassenger, Data = sessionPassengerList });
+                    return Ok(new Response<List<SessionPassenger>> { Message = Success.SuccesfullyReceivedSessionPassenger, Data = sessionPassengerList, Progress = true });
                 }
-                return Ok(new Response<List<SessionPassenger>> { Message = Error.NotAddedSessionPassenger, Data = new List<SessionPassenger>() });
+                return Ok(new Response<List<SessionPassenger>> { Message = Error.NotAddedSessionPassenger, Data = new List<SessionPassenger>(), Progress = false });
             }
             catch (Exception ex)
             {
@@ -96,9 +96,9 @@ namespace AirlineCompanyAPI.Controllers
                 SessionPassenger? updatedSessionPassenger = await _sessionPassengerLogic.UpdateAsync(updatedEntity.Id, updatedEntity);
                 if (updatedSessionPassenger != null)
                 {
-                    return Ok(new Response<SessionPassenger> { Message = Success.SuccesfullyUpdatedSessionPassenger, Data = updatedSessionPassenger });
+                    return Ok(new Response<SessionPassenger> { Message = Success.SuccesfullyUpdatedSessionPassenger, Data = updatedSessionPassenger, Progress = true });
                 }
-                return Ok(new Response<SessionPassenger> { Message = Error.NotUpdatedSessionPassenger, Data = new SessionPassenger() });
+                return Ok(new Response<SessionPassenger> { Message = Error.NotUpdatedSessionPassenger, Data = new SessionPassenger(), Progress = false });
             }
             catch (Exception ex)
             {
