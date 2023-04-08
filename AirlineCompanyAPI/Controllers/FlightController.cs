@@ -141,7 +141,7 @@ namespace AirlineCompanyAPI.Controllers
                 var list = _joinTableLogic.FindFlightsByDestinationJoinTables(journey.From, journey.To, journey.Date);
                 if (list != null)
                 {
-                    var pageResults = 1f;
+                    var pageResults = 3f;
                     var pageCount = Math.Ceiling(list.Count() / pageResults);
                     var products = list
                         .Skip((page - 1) * (int)pageResults)

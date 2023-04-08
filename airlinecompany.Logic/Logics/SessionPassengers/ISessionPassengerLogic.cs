@@ -13,6 +13,6 @@ namespace airlinecompany.Logic.Logics.SessionPassengers
         public bool Delete(int id);
         public List<SessionPassenger>? GetByPassengerId(int id);
         public SessionPassenger? GetSingle(int id);
-        public Task<SessionPassenger>? UpdateAsync(int id, SessionPassenger updatedEntity);
+        public Task<SessionPassenger?> UpdateAsync(int id, SessionPassenger updatedEntity);
     }
 }

@@ -46,7 +46,7 @@ namespace airlinecompany.Logic.Logics.Points
             return entity;
         }
 
-        public async Task<Point>? UpdateAsync(int id, Point updatedEntity)
+        public async Task<Point?> UpdateAsync(int id, Point updatedEntity)
         {
             Func<Point, bool> filter = filter => filter.Id == id;
             Point? updateResult = await _pointRepository.UpdateAsync(filter, updatedEntity);

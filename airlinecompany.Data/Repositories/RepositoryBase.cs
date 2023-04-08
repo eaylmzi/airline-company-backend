@@ -48,7 +48,7 @@ namespace airlinecompany.Data.Repositories
             return false;
         }
 
-        public List<T> Get(Func<T, bool> method)
+        public List<T>? Get(Func<T, bool> method)
         {
             var list = query
                       .Where(method)
@@ -92,7 +92,7 @@ namespace airlinecompany.Data.Repositories
             return entity;
         }
 
-        public async Task<T>? UpdateAsync(Func<T, bool> metot, T? updatedEntity)
+        public async Task<T?> UpdateAsync(Func<T, bool> metot, T updatedEntity)
         {
             try {
                 T? entity = query
@@ -115,7 +115,7 @@ namespace airlinecompany.Data.Repositories
                 return null;
             }
         }
-        public async Task<T>? UpdateAsync(T? entity, T? updatedEntity)
+        public async Task<T?> UpdateAsync(T? entity, T updatedEntity)
         {
             try
             {

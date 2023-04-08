@@ -13,7 +13,7 @@ namespace airlinecompany.Logic.Logics.FlightAttendants
         public bool Delete(int id);
         public List<FlightAttendant>? Get(string name);
         public FlightAttendant? GetSingle(int id);
-        public Task<FlightAttendant>? UpdateAsync(int id, FlightAttendant updatedEntity);
+        public Task<FlightAttendant?> UpdateAsync(int id, FlightAttendant updatedEntity);
         public bool CheckAvailabality(int flightAttendantId);
     }
 }

@@ -46,13 +46,13 @@ namespace airlinecompany.Logic.Logics.Passengers
             return entity;
         }
 
-        public async Task<Passenger>? UpdateAsync(int id, Passenger updatedEntity)
+        public async Task<Passenger?> UpdateAsync(int id, Passenger updatedEntity)
         {
             Func<Passenger, bool> filter = filter => filter.Id == id;
             Passenger? updateResult = await _passengerRepository.UpdateAsync(filter, updatedEntity);
             return updateResult;
         }
-        public async Task<Passenger>? UpdateAsync(Passenger entity, Passenger updatedEntity)
+        public async Task<Passenger?> UpdateAsync(Passenger entity, Passenger updatedEntity)
         {
             Passenger? updateResult = await _passengerRepository.UpdateAsync(entity, updatedEntity);
             return updateResult;

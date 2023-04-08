@@ -40,7 +40,7 @@ namespace airlinecompany.Logic.Logics.SessionPassengers
             return getSingleResult;
         }
 
-        public async Task<SessionPassenger>? UpdateAsync(int id, SessionPassenger updatedEntity)
+        public async Task<SessionPassenger?> UpdateAsync(int id, SessionPassenger updatedEntity)
         {
             Func<SessionPassenger, bool> filter = filter => filter.Id == id;
             SessionPassenger? updateResult = await _sessionPassengerRepository.UpdateAsync(filter, updatedEntity);

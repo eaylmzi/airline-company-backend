@@ -41,7 +41,7 @@ namespace airlinecompany.Logic.Logics.Planes
             return getSingleResult;
         }
 
-        public async Task<Plane>? UpdateAsync(int id, Plane updatedEntity)
+        public async Task<Plane?> UpdateAsync(int id, Plane updatedEntity)
         {
             Func<Plane, bool> filter = filter => filter.Id == id;
             Plane? updateResult = await _planeRepository.UpdateAsync(filter, updatedEntity);

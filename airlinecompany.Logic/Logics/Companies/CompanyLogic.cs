@@ -40,7 +40,7 @@ namespace airlinecompany.Logic.Logics.Companies
             return getSingleResult;
         }
 
-        public async Task<Company>? UpdateAsync(int id, Company updatedEntity)
+        public async Task<Company?> UpdateAsync(int id, Company updatedEntity)
         {
             Func<Company, bool> filter = filter => filter.Id == id;
             Company? updateResult = await _companyRepository.UpdateAsync(filter, updatedEntity);

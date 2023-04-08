@@ -13,7 +13,7 @@ namespace airlinecompany.Logic.Logics.Companies
         public bool Delete(int id);
         public List<Company>? Get(string name);
         public Company? GetSingle(int id);
-        public Task<Company>? UpdateAsync(int id, Company updatedEntity);
+        public Task<Company?> UpdateAsync(int id, Company updatedEntity);
         public bool CheckAvailabality(int companyId);
     }
 }

@@ -71,17 +71,17 @@ namespace AirlineCompanyAPI.Controllers
                 return BadRequest(ex.Message);
             }
         }
-        [HttpPost, Authorize(Roles = $"{Role.SuperAdmin}")]
-        public ActionResult<Response<SessionPassenger>> Get([FromBody] IdDto idDto)
+        [HttpPost, Authorize(Roles = $"{Role.Passenger},{Role.SuperAdmin}")]
+        public ActionResult<Response<List<SessionPassenger>>> Get([FromBody] IdDto idDto)
         {
             try
             {
-                SessionPassenger? sessionPassenger = _sessionPassengerLogic.GetSingle(idDto.Id);
-                if (sessionPassenger != null)
+                var sessionPassengerList = _sessionPassengerLogic.GetByPassengerId(idDto.Id);
+                if (sessionPassengerList != null)
                 {
-                    return Ok(new Response<SessionPassenger> { Message = Success.SuccesfullyReceivedSessionPassenger, Data = sessionPassenger });
+                    return Ok(new Response<List<SessionPassenger>> { Message = Success.SuccesfullyReceivedSessionPassenger, Data = sessionPassengerList });
                 }
-                return Ok(new Response<SessionPassenger> { Message = Error.NotAddedSessionPassenger, Data = new SessionPassenger() });
+                return Ok(new Response<List<SessionPassenger>> { Message = Error.NotAddedSessionPassenger, Data = new List<SessionPassenger>() });
             }
             catch (Exception ex)
             {

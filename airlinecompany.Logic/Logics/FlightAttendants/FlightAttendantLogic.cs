@@ -40,7 +40,7 @@ namespace airlinecompany.Logic.Logics.FlightAttendants
             return getSingleResult;
         }
 
-        public async Task<FlightAttendant>? UpdateAsync(int id, FlightAttendant updatedEntity)
+        public async Task<FlightAttendant?> UpdateAsync(int id, FlightAttendant updatedEntity)
         {
             Func<FlightAttendant, bool> filter = filter => filter.Id == id;
             FlightAttendant? updateResult = await _flightAttendantRepository.UpdateAsync(filter, updatedEntity);
