@@ -47,6 +47,9 @@ namespace airlinecompany.Data.Resources.String
         public const string NotUpdatedFlight = "The flight is not updated";
         public const string NotDeletedFlight = "The flight is not deleted";
         public const string NotAvailableFlight = "The flight is not available, it has a flight";
+        public const string NotOccuredTransaction = "The transaction failed to start";
+        public const string NotReceivedMoneyCompany = "The company not received money";
+        public const string NotReceivedMoneyPassenger = "The passenger not received money";
 
         public const string NotFoundSessionPassenger = "The session passenger is not found";
         public const string NotAddedSessionPassenger = "The session passenger is not added";

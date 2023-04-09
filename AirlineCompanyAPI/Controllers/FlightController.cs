@@ -169,10 +169,6 @@ namespace AirlineCompanyAPI.Controllers
 
                 }
                 return Unauthorized(new Response<FlightDetails> { Message = Error.NotMatchedUser, Data = new FlightDetails(), Progress = false });
-               
-
-
-
             }
             catch (Exception ex)
             {

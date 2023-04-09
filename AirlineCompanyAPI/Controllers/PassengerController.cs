@@ -52,7 +52,7 @@ namespace AirlineCompanyAPI.Controllers
             _userService = userService;
          }
         [HttpPost]
-        public async Task<ActionResult<SignUpResult>> SignUp([FromBody] PassengerSignUpDto passengerSignUpDto)
+        public async Task<ActionResult<Response<Passenger>>> SignUp([FromBody] PassengerSignUpDto passengerSignUpDto)
         {
             try
             {
@@ -62,8 +62,8 @@ namespace AirlineCompanyAPI.Controllers
                 _cipherService.CreatePasswordHash(passengerSignUpDto.Password, out byte[] passwordHash, out byte[] passwordSalt);
                 newEntity.PasswordHash = passwordHash;
                 newEntity.PasswordSalt = passwordSalt;
-
-                return await _userService.SignUp(newEntity);
+                Response<Passenger> passenger = await _userService.SignUp(newEntity);
+                return passenger;
             }
             catch (Exception ex)
             {
