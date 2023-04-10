@@ -18,11 +18,13 @@ namespace airlinecompany.Data.Resources.String
         public const string NotFoundPassengerCredential = "The username and password did not match";
         public const string NotUpdatedPassenger = "The passenger is not updated";
 
+        public const string FullPlane = "The plane is not available, it has full capacity";
         public const string NotFoundPlane = "The plane is not found";
         public const string NotAddedPlane = "The plane is not added";
         public const string NotUpdatedPlane = "The plane is not updated";
         public const string NotDeletedPlane = "The plane is not deleted";
         public const string NotAvailablePlane = "The plane is not available, it has a flight";
+        
 
         public const string NotFoundFlightAttendant = "The flight attendant is not found";
         public const string NotAddedFlightAttendant = "The flight attendant is not added";

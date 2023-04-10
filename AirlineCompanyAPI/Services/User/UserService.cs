@@ -52,16 +52,6 @@ namespace AirlineCompanyAPI.Services.User
             _cipherService = cipherService;
             _flightLogic = flightLogic;
         }
-
-        private SignUpResult CreateSignUpResult(string message,int passengerId,Passenger passenger)
-        {
-            return new SignUpResult
-            {
-                ResultMessage = message,
-                isPassengerAdded = passengerId,
-                passenger = passenger
-            };
-        }
         private async Task<Passenger> AssingToken(int passengerId)
         {
             Passenger? addedPassenger = _passengerLogic.GetSingle(passengerId);
@@ -74,8 +64,7 @@ namespace AirlineCompanyAPI.Services.User
             }           
             return updatedPassenger;
             
-        }
-       
+        }   
         public async Task<Response<Passenger>> SignUp(PassengerDto passengerDto)
         {
             Passenger? isAlreadyAdded = _passengerLogic.GetSingleByUsername(passengerDto.UserName);
@@ -101,97 +90,44 @@ namespace AirlineCompanyAPI.Services.User
             _passengerLogic.Delete(passengerId);
             return new Response<Passenger> { Message = Error.NotAssignedToken, Data = new Passenger(), Progress = false };
         }
-        public async Task<Response<PurchasedFlight>> BuyTicket(FlightDetails flightDetails, IHeaderDictionary headers)
-        {
-            PurchasedFlight purchasedFlight = _mapper.Map<PurchasedFlight>(flightDetails);
-            Passenger? passenger = _passengerLogic.GetSingleByUsername(_jwtService.GetUserNameFromToken(headers));
-            if (passenger == null)
-            {
-                return new Response<PurchasedFlight> { Message = Error.NotFoundPassenger, Data = new PurchasedFlight(), Progress = false };
-            }
 
-            if(passenger.Money < flightDetails.Price)
-            {
-                return new Response<PurchasedFlight> { Message = Error.NotEnoughMoney, Data = new PurchasedFlight(), Progress = false };
-            }
-
-            Response<Passenger> isPaid = await TransferMoneyToCompany(passenger, flightDetails);
-            if (!isPaid.Progress)
-            {
-                return new Response<PurchasedFlight> { Message = Error.NotPaidPayment, Data = new PurchasedFlight(), Progress = false };
-            }
-
-
-            int sessionPassenger = _sessionPassengerLogic.Add(new SessionPassenger
-            {
-                FlightId = flightDetails.FlightId,
-                PassengerId = _jwtService.GetUserIdFromToken(headers)
-            });
-            if (sessionPassenger < 0)
-            {
-                Response<Passenger> isReceived = await TransferMoneyToPassenger(passenger, flightDetails);
-                if (isReceived.Progress)
-                {
-                    return new Response<PurchasedFlight> { Message = Error.NotRegisteredToFlight, Data = new PurchasedFlight(), Progress = false };
-                }
-                return new Response<PurchasedFlight> { Message = Error.NotReceivedPaymentForPassenger, Data = new PurchasedFlight(), Progress = false };
-            }
-
-            Flight? flight = _flightLogic.GetSingle(flightDetails.FlightId);
-            if(flight != null)
-            {
-                flight.PassengerCount = flight.PassengerCount + 1;
-                await _flightLogic.UpdateAsync(flight.Id, flight);
-            }
-            return new Response<PurchasedFlight> { Message = Success.SuccesfullyBought, Data = purchasedFlight, Progress = true };
-
-
-
-        }
-     
-        private async Task<Response<Passenger>> TransferMoneyToCompany(Passenger passenger,FlightDetails flightDetails)
+        private async Task<PassengerMoneyTransaction> TransferMoneyToCompany(Passenger passenger, FlightDetails flightDetails)
         {
             PassengerMoneyTransaction isPaid = await PayToCompany(passenger, flightDetails);
-            if (isPaid.IsConfirmed)
+            if (!isPaid.IsConfirmed)
             {
-                PassengerMoneyTransaction isReceived = await ReceiveMoneyByCompany(flightDetails);
-                if (isReceived.IsConfirmed)
-                {
-                    return new Response<Passenger> { Message = isReceived.Message, Data = new Passenger(), Progress = isReceived.IsConfirmed };
-                }
-                else
-                {
-                  PassengerMoneyTransaction isReceivedByPassenger = await ReceivedMoneyByPassenger(passenger, flightDetails);
-                    if (isReceivedByPassenger.IsConfirmed)
-                    {
-                        return new Response<Passenger> { Message = isReceivedByPassenger.Message, Data = new Passenger(), Progress = isReceivedByPassenger.IsConfirmed };
-                    }
-                    return new Response<Passenger> { Message = isReceivedByPassenger.Message, Data = new Passenger(), Progress = isReceivedByPassenger.IsConfirmed };
-                }
+                return new PassengerMoneyTransaction { Message = isPaid.Message, IsConfirmed = false };
             }
-            return new Response<Passenger> { Message = isPaid.Message, Data = new Passenger(), Progress = false};
+            PassengerMoneyTransaction isReceived = await ReceiveMoneyByCompany(flightDetails);
+            if (!isReceived.IsConfirmed)
+            {
+                PassengerMoneyTransaction isReceivedByPassenger = await ReceivedMoneyByPassenger(passenger, flightDetails);
+                if (!isReceivedByPassenger.IsConfirmed)
+                {
+                    return new PassengerMoneyTransaction { Message = isReceived.Message + isReceivedByPassenger.Message, IsConfirmed = false };
+                }
+                return new PassengerMoneyTransaction { Message = isReceived.Message , IsConfirmed = false };            
+            }
+            return new PassengerMoneyTransaction {IsConfirmed = true };
         }
-        private async Task<Response<Passenger>> TransferMoneyToPassenger(Passenger passenger, FlightDetails flightDetails)
+        private async Task<PassengerMoneyTransaction> TransferMoneyToPassenger(Passenger passenger, FlightDetails flightDetails)
         {
             PassengerMoneyTransaction isPaid = await PayToPassenger(flightDetails);
-            if (isPaid.IsConfirmed)
+            if (!isPaid.IsConfirmed)
             {
-                PassengerMoneyTransaction isReceived = await ReceivedMoneyByPassenger(passenger,flightDetails);
-                if (isReceived.IsConfirmed)
-                {
-                    return new Response<Passenger> { Message = isReceived.Message, Data = new Passenger(), Progress = isReceived.IsConfirmed };
-                }
-                else
-                {
-                    PassengerMoneyTransaction isReceivedByCompany =  await ReceiveMoneyByCompany(flightDetails);
-                    if (isReceivedByCompany.IsConfirmed)
-                    {
-                        return new Response<Passenger> { Message = isReceivedByCompany.Message, Data = new Passenger(), Progress = isReceivedByCompany.IsConfirmed };
-                    }
-                    return new Response<Passenger> { Message = isReceivedByCompany.Message, Data = new Passenger(), Progress = isReceivedByCompany.IsConfirmed };
-                }
+                return new PassengerMoneyTransaction { Message = isPaid.Message, IsConfirmed = false};
             }
-            return new Response<Passenger> { Message = isPaid.Message, Data = new Passenger(), Progress = false };
+            PassengerMoneyTransaction isReceived = await ReceivedMoneyByPassenger(passenger, flightDetails);
+            if (!isReceived.IsConfirmed)
+            {
+                PassengerMoneyTransaction isReceivedByCompany = await ReceiveMoneyByCompany(flightDetails);
+                if (!isReceivedByCompany.IsConfirmed)
+                {
+                    return new PassengerMoneyTransaction { Message = isReceived.Message + isReceivedByCompany.Message, IsConfirmed = isReceivedByCompany.IsConfirmed };
+                }
+                return new PassengerMoneyTransaction { Message = isReceivedByCompany.Message, IsConfirmed = isReceivedByCompany.IsConfirmed };
+            }
+            return new PassengerMoneyTransaction { IsConfirmed = true };
         }
         private async Task<PassengerMoneyTransaction> ReceiveMoneyByCompany(FlightDetails flightDetails)
         {
@@ -199,19 +135,19 @@ namespace AirlineCompanyAPI.Services.User
             if (flight != null)
             {
                 Company? company = _companyLogic.GetSingle(flight.CompanyId);
-                if(company != null)
+                if (company != null)
                 {
                     company.TotalMoney = company.TotalMoney + flightDetails.Price;
                     Company? updatedResult = await _companyLogic.UpdateAsync(company.Id, company);
-                    if(updatedResult != null)
+                    if (updatedResult != null)
                     {
-                        return new PassengerMoneyTransaction {IsConfirmed = true }; 
+                        return new PassengerMoneyTransaction { IsConfirmed = true };
                     }
-                    return new PassengerMoneyTransaction { Message = Error.NotReceivedMoneyCompany, IsConfirmed = false }; 
+                    return new PassengerMoneyTransaction { Message = Error.NotReceivedMoneyCompany, IsConfirmed = false };
                 }
                 return new PassengerMoneyTransaction { Message = Error.NotFoundCompany, IsConfirmed = false };
             }
-            return new PassengerMoneyTransaction { Message = Error.NotFoundFlight , IsConfirmed = false};
+            return new PassengerMoneyTransaction { Message = Error.NotFoundFlight, IsConfirmed = false };
         }
         private async Task<PassengerMoneyTransaction> ReceivedMoneyByPassenger(Passenger passenger, FlightDetails flightDetails)
         {
@@ -219,9 +155,9 @@ namespace AirlineCompanyAPI.Services.User
             Passenger? isPaid = await _passengerLogic.UpdateAsync(passenger.Id, passenger);
             if (isPaid != null)
             {
-                return new PassengerMoneyTransaction{IsConfirmed = true };
+                return new PassengerMoneyTransaction { IsConfirmed = true };
             }
-            return new PassengerMoneyTransaction {Message = Error.NotReceivedMoneyPassenger, IsConfirmed = false };
+            return new PassengerMoneyTransaction { Message = Error.NotReceivedMoneyPassenger, IsConfirmed = false };
         }
         private async Task<PassengerMoneyTransaction> PayToCompany(Passenger passenger, FlightDetails flightDetails)
         {
@@ -229,9 +165,9 @@ namespace AirlineCompanyAPI.Services.User
             Passenger? isPaid = await _passengerLogic.UpdateAsync(passenger.Id, passenger);
             if (isPaid != null)
             {
-                return new PassengerMoneyTransaction {IsConfirmed = true};
+                return new PassengerMoneyTransaction { IsConfirmed = true };
             }
-            return new PassengerMoneyTransaction { Message = Error.NotOccuredTransaction, IsConfirmed = true};
+            return new PassengerMoneyTransaction { Message = Error.NotOccuredTransaction, IsConfirmed = true };
         }
         private async Task<PassengerMoneyTransaction> PayToPassenger(FlightDetails flightDetails)
         {
@@ -251,8 +187,92 @@ namespace AirlineCompanyAPI.Services.User
                 }
                 return new PassengerMoneyTransaction { Message = Error.NotFoundCompany, IsConfirmed = false };
             }
-            return new PassengerMoneyTransaction {Message = Error.NotFoundFlight, IsConfirmed = false};
+            return new PassengerMoneyTransaction { Message = Error.NotFoundFlight, IsConfirmed = false };
         }
+        private bool IsFlightEmpty(Flight flight, Plane plane)
+        {
+            if (flight.PassengerCount < plane.SeatNumber)
+            {
+                return true;
+            }
+            else
+            {
+                return false;
+            }
+
+        }
+        public async Task<Response<PurchasedFlight>> BuyTicket(FlightDetails flightDetails, IHeaderDictionary headers)
+        {
+            PurchasedFlight purchasedFlight = _mapper.Map<PurchasedFlight>(flightDetails);
+            Flight? flight = _flightLogic.GetSingle(flightDetails.FlightId);
+            if (flight == null)
+            {
+                return new Response<PurchasedFlight> { Message = Error.NotFoundFlight, Data = new PurchasedFlight(), Progress = false };
+            }
+            Plane? plane = _planeLogic.GetSingle(flight.PlaneNumber);
+            if(plane == null)
+            {
+                return new Response<PurchasedFlight> { Message = Error.NotFoundFlight, Data = new PurchasedFlight(), Progress = false };
+            }
+            bool isPlaneEmpty = IsFlightEmpty(flight, plane);
+            if (!isPlaneEmpty)
+            {
+                return new Response<PurchasedFlight> { Message = Error.FullPlane, Data = new PurchasedFlight(), Progress = false };
+            }
+
+
+            Passenger? passenger = _passengerLogic.GetSingleByUsername(_jwtService.GetUserNameFromToken(headers));
+            if (passenger == null)
+            {
+                return new Response<PurchasedFlight> { Message = Error.NotFoundPassenger, Data = new PurchasedFlight(), Progress = false };
+            }
+
+            if(passenger.Money < flightDetails.Price)
+            {
+                return new Response<PurchasedFlight> { Message = Error.NotEnoughMoney, Data = new PurchasedFlight(), Progress = false };
+            }
+
+            PassengerMoneyTransaction isPaid = await TransferMoneyToCompany(passenger, flightDetails);
+            if (!isPaid.IsConfirmed)
+            {
+                return new Response<PurchasedFlight> { Message = isPaid.Message, Data = new PurchasedFlight(), Progress = false };
+            }
+
+
+            int sessionPassenger = _sessionPassengerLogic.Add(new SessionPassenger
+            {
+                FlightId = flightDetails.FlightId,
+                PassengerId = _jwtService.GetUserIdFromToken(headers)
+            });
+            if (sessionPassenger < 0)
+            {
+                PassengerMoneyTransaction isReceived = await TransferMoneyToPassenger(passenger, flightDetails);
+                if (!isReceived.IsConfirmed)
+                {
+                    return new Response<PurchasedFlight> { Message = Error.NotReceivedPaymentForPassenger, Data = new PurchasedFlight(), Progress = false };
+                }
+                return new Response<PurchasedFlight> { Message = Error.NotRegisteredToFlight, Data = new PurchasedFlight(), Progress = false };             
+            }
+        
+            flight.PassengerCount = flight.PassengerCount + 1;
+            Flight? isUpdated = await _flightLogic.UpdateAsync(flight.Id, flight);
+            if (isUpdated == null)
+            {
+                PassengerMoneyTransaction isReceived = await TransferMoneyToPassenger(passenger, flightDetails);
+                if (!isReceived.IsConfirmed)
+                {
+                    return new Response<PurchasedFlight> { Message = Error.NotReceivedPaymentForPassenger, Data = new PurchasedFlight(), Progress = false };
+                }
+                return new Response<PurchasedFlight> { Message = Error.NotRegisteredToFlight, Data = new PurchasedFlight(), Progress = false };
+            }
+
+            else
+            {
+                return new Response<PurchasedFlight> { Message = Success.SuccesfullyBought, Data = purchasedFlight, Progress = true };
+            }
+
+        }
+
 
 
 
